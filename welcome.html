@@ -6,9 +6,12 @@
     <title>Pizza simulator</title>
     <link rel="icon" href="img/pizza_icon.ico" type="image/x-icon">
     <link rel="stylesheet" href="css/style.css">
+    <script src="js/"></script>
 </head>
-<body class="welcome-body">
-    <div class="container">
+<body class="settings-body">
+
+    <!-- Welcome page -->
+    <div class="welcome-container unvisible">
         <div class="welcome">
             <h1 class="welcome_heading">Pizza simulator</h1>
             <div class="title_divider"></div>
@@ -25,5 +28,58 @@
             </div>
         </div>
     </div>
+
+    <!-- Settings page -->
+    <div class="settings-container">
+        <div>
+            <img class="pizza-bg-image" src="img/bg_pizza_3.png" alt="pizza!">
+            <img class="pizza-bg-image" src="img/bg_pizza_2.svg" alt="pizza!">
+        </div>
+        <div class="settings">
+            <div class="settings_title shady">
+                <h2>Settings</h2>
+            </div>
+            <div class="settings_decoration">
+                <div class="settings-rope shady"></div>
+                <div class="settings-rope shady"></div>
+            </div>
+            <div class="main-settings-menu_block shady">
+                <div class="menu_block_item">
+                    <h2>Amount of cash registers</h2>
+                    <select class="menu_block_item_select">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+                </div>
+                <div class="menu_block_item">
+                    <h2>Amount of cooks</h2>
+                    <select class="menu_block_item_select">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+                </div>
+                <div class="menu_block_item">
+                    <h2>Cooking strategy</h2>
+                    <select class="menu_block_item_select">
+                        <option value="1:1">1:1</option>
+                        <option value="m:m">m:m</option>
+                    </select>
+                </div>
+                <div class="menu_block_items_divider"></div>
+                <div class="settings-buttons-panel">
+                    <button class="button simple-button">Cancel</button>
+                    <button class="button priority-button">Save</button>
+                </div>
+            </div>
+        </div>
+        <div>
+            <img class="pizza-bg-image" src="img/bg_pizza_1.svg" alt="pizza!">
+        </div>
+    </div>
+
 </body>
 </html>
