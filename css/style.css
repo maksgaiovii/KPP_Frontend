@@ -65,12 +65,58 @@ body {
 
     font-family: 'PizzaSimulatorHeadingsFont';
     font-size: 14pt;
+
+    transition-duration: 0.4s;
+    cursor: pointer;
 }
+
+.button:hover {
+    background: white;
+    color: var(--main-red-color);
+    border: 3px solid var(--main-red-color);
+    transform: translatey(-3px);
+}
+
+.button::before,
+.button::after {
+    content: '';
+    display: block;
+    height: 2px;
+    border-radius: 10px;
+    position: absolute;
+    top: 0;
+    transition-duration: 0.4s;
+}
+
+.button:hover::before,
+.button:hover::after {
+    background-color: var(--main-red-color);
+}
+
+.button::before {
+    width: 80%;
+    left: 10%;
+}
+
+.button:hover::before {
+    top: 40px;
+}
+
+.button::after {
+    width: 60%;
+    left: 21%;
+    transition-duration: 0.8s;
+}
+
+.button:hover::after {
+    top: 47px;
+}
+
 
 .priority-button {
     background: var(--main-red-color);
     color: var(--white-text-color);
-    border: none;
+    border: 3px solid transparent;
 }
 
 .simple-button {
