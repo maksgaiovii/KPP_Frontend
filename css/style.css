@@ -108,6 +108,16 @@ p, span {
     grid-template-columns: 1fr 1fr;
 }
 
+.welcome-container,
+.settings-container {
+    transition-duration: 0.4s;
+}
+
+.settings-container {
+    transform: scale(0.8) translateY(-50px);
+    opacity: 0;
+}
+
 /* Welcome column */
 
 .welcome {

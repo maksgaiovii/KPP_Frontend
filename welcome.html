@@ -6,12 +6,13 @@
     <title>Pizza simulator</title>
     <link rel="icon" href="img/pizza_icon.ico" type="image/x-icon">
     <link rel="stylesheet" href="css/style.css">
-    <script src="js/"></script>
+    <script src="js/jquery-3.7.1.min.js" async></script>
+    <script src="js/script.js" async></script>
 </head>
 <body class="settings-body">
 
     <!-- Welcome page -->
-    <div class="welcome-container unvisible">
+    <div id="welcomeWindow" class="welcome-container">
         <div class="welcome">
             <h1 class="welcome_heading">Pizza simulator</h1>
             <div class="title_divider"></div>
@@ -19,7 +20,7 @@
             <div class="buttons-panel">
                 <button class="button priority-button">Start</button>
                 <div class="button_divider"></div>
-                <button class="button simple-button">Setting</button>
+                <button id="goToSettingsButton" class="button simple-button">Setting</button>
             </div>
         </div>
         <div class="pizza-animation">
@@ -30,7 +31,7 @@
     </div>
 
     <!-- Settings page -->
-    <div class="settings-container">
+    <div id="settingsWindow" class="settings-container unvisible">
         <div>
             <img class="pizza-bg-image" src="img/bg_pizza_3.png" alt="pizza!">
             <img class="pizza-bg-image" src="img/bg_pizza_2.svg" alt="pizza!">
@@ -71,8 +72,8 @@
                 </div>
                 <div class="menu_block_items_divider"></div>
                 <div class="settings-buttons-panel">
-                    <button class="button simple-button">Cancel</button>
-                    <button class="button priority-button">Save</button>
+                    <button id="cancelSettingsButton" class="button simple-button">Cancel</button>
+                    <button id="saveSettingsButton" class="button priority-button">Save</button>
                 </div>
             </div>
         </div>
