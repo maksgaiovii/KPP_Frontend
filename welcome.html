@@ -6,14 +6,16 @@
     <title>Pizza simulator</title>
     <link rel="icon" href="img/pizza_icon.ico" type="image/x-icon">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/media.css">
     <script src="js/jquery-3.7.1.min.js" async></script>
     <script src="js/script.js" async></script>
 </head>
-<body class="settings-body">
+<body id="bodyOfPage" class="welcome-body">
 
     <!-- Welcome page -->
     <div id="welcomeWindow" class="welcome-container">
         <div class="welcome">
+            <img class="mobile-pizza-icon" src="img/bg_pizza_3.png" alt="pizza!">
             <h1 class="welcome_heading">Pizza simulator</h1>
             <div class="title_divider"></div>
             <span class="welcome_description">Plunge into the world of pizza! Cook, experiment, enjoy!</span>
@@ -46,7 +48,7 @@
             </div>
             <div class="main-settings-menu_block shady">
                 <div class="menu_block_item">
-                    <h2>Amount of cash registers</h2>
+                    <h2 class="menu_block_item_heading">Amount of cash registers</h2>
                     <select class="menu_block_item_select">
                         <option value="1">1</option>
                         <option value="2">2</option>
@@ -55,7 +57,7 @@
                     </select>
                 </div>
                 <div class="menu_block_item">
-                    <h2>Amount of cooks</h2>
+                    <h2 class="menu_block_item_heading">Amount of cooks</h2>
                     <select class="menu_block_item_select">
                         <option value="1">1</option>
                         <option value="2">2</option>
@@ -64,7 +66,7 @@
                     </select>
                 </div>
                 <div class="menu_block_item">
-                    <h2>Cooking strategy</h2>
+                    <h2 class="menu_block_item_heading">Cooking strategy</h2>
                     <select class="menu_block_item_select">
                         <option value="1:1">1:1</option>
                         <option value="m:m">m:m</option>
@@ -76,6 +78,10 @@
                     <button id="saveSettingsButton" class="button priority-button">Save</button>
                 </div>
             </div>
+        </div>
+        <div class="mobile-settings-buttons-panel">
+            <button id="mobileSaveSettingsButton" class="button priority-button">Save</button>
+            <button id="mobileCancelSettingsButton" class="button simple-button">Cancel</button>
         </div>
         <div>
             <img class="pizza-bg-image" src="img/bg_pizza_1.svg" alt="pizza!">

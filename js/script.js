@@ -1,24 +1,40 @@
 $(document).ready(function() {
     const cancelSettingsButton = $("#cancelSettingsButton");
     const saveSettingsButton = $("#saveSettingsButton");
+
+    const mobileSaveSettingsButton = $("#mobileSaveSettingsButton");
+    const mobileCancelSettingsButton = $("#mobileCancelSettingsButton");
+
     const goToSettingsButton = $("#goToSettingsButton");
     const welcomeWindow = $("#welcomeWindow");
     const settingsWindow = $("#settingsWindow");
+    const bodyOfPage = $("#bodyOfPage");
 
     goToSettingsButton.click(function() {
-        showSettings(welcomeWindow, settingsWindow);
+        showSettings(welcomeWindow, settingsWindow, bodyOfPage);
     });
 
     cancelSettingsButton.click(function() {
-        hideSettings(welcomeWindow, settingsWindow);
+        hideSettings(welcomeWindow, settingsWindow, bodyOfPage);
+    });
+    
+    mobileCancelSettingsButton.click(function() {
+        hideSettings(welcomeWindow, settingsWindow, bodyOfPage);
     });
 
     saveSettingsButton.click(function() {
-        hideSettings(welcomeWindow, settingsWindow);
+        hideSettings(welcomeWindow, settingsWindow, bodyOfPage);
+    });
+
+    mobileSaveSettingsButton.click(function() {
+        hideSettings(welcomeWindow, settingsWindow, bodyOfPage);
     });
 });
 
-function showSettings(welcomeWindow, settingsWindow) {
+function showSettings(welcomeWindow, settingsWindow, bodyOfPage) {
+    bodyOfPage.removeClass('welcome-body');
+    bodyOfPage.addClass('settings-body');
+    
     welcomeWindow.css({
         'transform': 'scale(0.8)'
     });
@@ -49,7 +65,7 @@ function showSettings(welcomeWindow, settingsWindow) {
     }, 1220);
 }
 
-function hideSettings(welcomeWindow, settingsWindow) {
+function hideSettings(welcomeWindow, settingsWindow, bodyOfPage) {
     settingsWindow.css({
         'transform': 'scale(0.8)'
     });
@@ -77,5 +93,8 @@ function hideSettings(welcomeWindow, settingsWindow) {
         welcomeWindow.css({
             'transform': 'scale(1.0)'
         });
+
+        bodyOfPage.addClass('welcome-body');
+        bodyOfPage.removeClass('settings-body');
     }, 1620);
 }
