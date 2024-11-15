@@ -1,13 +1,13 @@
-/* eslint-disable no-empty-pattern */
-/* eslint-disable @typescript-eslint/no-empty-object-type */
 import { useEffect } from 'react';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import * as util from '../../util/js/script.js';
+import { useDispatch } from 'react-redux';
+import { setMenuState } from '../../redux/reduser/menu.js';
 
-export interface IWelcomeProps {}
+export function Welcome() {
+  const dispatch = useDispatch();
 
-export function Welcome({}: IWelcomeProps) {
   useEffect(() => {
     util.ready();
   }, []);
@@ -21,7 +21,15 @@ export function Welcome({}: IWelcomeProps) {
           <div className="title_divider"></div>
           <span className="welcome_description">Plunge into the world of pizza! Cook, experiment, enjoy!</span>
           <div className="buttons-panel">
-            <button className="button priority-button">Start</button>
+            <button
+              className="button priority-button"
+              onClick={() => {
+                console.log('Start button clicked');
+                dispatch(setMenuState('playing'));
+              }}
+            >
+              Start
+            </button>
             <div className="button_divider"></div>
             <button id="goToSettingsButton" className="button simple-button">
               Setting

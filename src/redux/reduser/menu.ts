@@ -1,33 +1,27 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface MenuState {
-  amountOfCashRegisters: string;
-  amountOfCooks: string;
-  cookingStrategy: string;
+  state: 'prewiev' | 'playing' | 'finished';
 }
 
 export const initialMenuState: MenuState = {
-  amountOfCashRegisters: '1',
-  amountOfCooks: '1',
-  cookingStrategy: '1:1',
+  state: 'prewiev',
 };
 
 const menuSlice = createSlice({
   name: 'menu',
   initialState: initialMenuState,
   reducers: {
-    setAmountOfCashRegisters(state, action: PayloadAction<string>) {
-      state.amountOfCashRegisters = action.payload;
+    setMenuState(state, action: PayloadAction<MenuState['state']>) {
+      state.state = action.payload;
     },
-    setAmountOfCooks(state, action: PayloadAction<string>) {
-      state.amountOfCooks = action.payload;
-    },
-    setCookingStrategy(state, action: PayloadAction<string>) {
-      state.cookingStrategy = action.payload;
-    },
+  },
+  selectors: {
+    selectMenuState: (state: MenuState) => state.state,
   },
 });
 
-export const { setAmountOfCashRegisters, setAmountOfCooks, setCookingStrategy } = menuSlice.actions;
+export const { setMenuState } = menuSlice.actions;
+export const { selectMenuState } = menuSlice.selectors;
 
 export default menuSlice.reducer;

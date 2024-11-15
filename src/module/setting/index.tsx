@@ -1,18 +1,13 @@
-/* eslint-disable no-empty-pattern */
-
 import { useCallback, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
-import { setAmountOfCooks, setAmountOfCashRegisters, setCookingStrategy } from '../../redux/reduser/menu';
+import { setAmountOfCooks, setAmountOfCashRegisters, setCookingStrategy } from '../../redux/reduser/setting';
 
-/* eslint-disable @typescript-eslint/no-empty-object-type */
-export interface ISettingProps {}
-
-export function Setting({}: ISettingProps) {
+export function Setting() {
   const dispatch = useDispatch();
 
   const menu = useCallback((header: string, options: string[], onSelect: (_item: string) => void) => {
     return (
-      <div className="menu_block_item">
+      <div className="menu_block_item" key={header}>
         <h2 className="menu_block_item_heading">{header}</h2>
         <select
           className="menu_block_item_select"
@@ -21,7 +16,7 @@ export function Setting({}: ISettingProps) {
           }}
         >
           {options.map((option) => (
-            <option key={option} value={option}>
+            <option key={option + '' + header} value={option}>
               {option}
             </option>
           ))}
@@ -31,11 +26,15 @@ export function Setting({}: ISettingProps) {
   }, []);
 
   const menus = useMemo(() => {
+    const arr = Array.from({ length: 8 })
+      .map((_, i) => i + 1)
+      .map(String);
+
     return [
-      menu('Amount of cash registers', ['1', '2', '3', '4'], (value: string) => {
+      menu('Amount of cash registers', arr, (value: string) => {
         dispatch(setAmountOfCashRegisters(value));
       }),
-      menu('Amount of cooks', ['1', '2', '3', '4'], (value: string) => {
+      menu('Amount of cooks', arr, (value: string) => {
         dispatch(setAmountOfCooks(value));
       }),
       menu('Cooking strategy', ['1:1', 'm:m'], (value: string) => {

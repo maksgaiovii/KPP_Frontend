@@ -1,8 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
+import settingReduser from './reduser/setting';
 import menuReduser from './reduser/menu';
 
 const store = configureStore({
   reducer: {
+    setting: settingReduser,
     menu: menuReduser,
   },
 });
