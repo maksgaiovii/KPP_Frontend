@@ -1,14 +1,14 @@
-$(document).ready(function() {
-    const cancelSettingsButton = $("#cancelSettingsButton");
-    const saveSettingsButton = $("#saveSettingsButton");
+export function ready() {
+    const cancelSettingsButton = window.$("#cancelSettingsButton");
+    const saveSettingsButton = window.$("#saveSettingsButton");
 
-    const mobileSaveSettingsButton = $("#mobileSaveSettingsButton");
-    const mobileCancelSettingsButton = $("#mobileCancelSettingsButton");
+    const mobileSaveSettingsButton = window.$("#mobileSaveSettingsButton");
+    const mobileCancelSettingsButton = window.$("#mobileCancelSettingsButton");
 
-    const goToSettingsButton = $("#goToSettingsButton");
-    const welcomeWindow = $("#welcomeWindow");
-    const settingsWindow = $("#settingsWindow");
-    const bodyOfPage = $("#bodyOfPage");
+    const goToSettingsButton = window.$("#goToSettingsButton");
+    const welcomeWindow = window.$("#welcomeWindow");
+    const settingsWindow = window.$("#settingsWindow");
+    const bodyOfPage = window.$("#root");
 
     goToSettingsButton.click(function() {
         showSettings(welcomeWindow, settingsWindow, bodyOfPage);
@@ -29,7 +29,7 @@ $(document).ready(function() {
     mobileSaveSettingsButton.click(function() {
         hideSettings(welcomeWindow, settingsWindow, bodyOfPage);
     });
-});
+}
 
 function showSettings(welcomeWindow, settingsWindow, bodyOfPage) {
     bodyOfPage.removeClass('welcome-body');
