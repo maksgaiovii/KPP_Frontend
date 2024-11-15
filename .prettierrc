@@ -1,13 +1,14 @@
 {
-    "trailingComma": "all",
-    "tabWidth": 2,
-    "semi": true,
-    "singleQuote": true,
-    "printWidth": 120,
-    "bracketSpacing": true,
-    "endOfLine": "lf",
-    
-    "importOrder": ["^components/(.*)$", "^[./]" ],
-    "importOrderSeparation": true, 
-    "importOrderSortSpecifiers": true 
-  }
+  "trailingComma": "all",
+  "tabWidth": 2,
+  "semi": true,
+  "singleQuote": true,
+  "printWidth": 120,
+  "bracketSpacing": true,
+  "endOfLine": "lf",
+
+  "importOrder": ["^react.*$", "<THIRD_PARTY_MODULES>", "^components/(.*)$", "^[./]"],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true,
+  "importOrderSortSpecifiersAlphabetically": true
+}

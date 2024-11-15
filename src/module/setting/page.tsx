@@ -1,8 +1,49 @@
 /* eslint-disable no-empty-pattern */
+
+import { useCallback, useMemo } from 'react';
+import { useDispatch } from 'react-redux';
+import { setAmountOfCooks, setAmountOfCashRegisters, setCookingStrategy } from '../../redux/reduser/menu';
+
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 export interface ISettingProps {}
 
 export function Setting({}: ISettingProps) {
+  const dispatch = useDispatch();
+
+  const menu = useCallback((header: string, options: string[], onSelect: (_item: string) => void) => {
+    return (
+      <div className="menu_block_item">
+        <h2 className="menu_block_item_heading">{header}</h2>
+        <select
+          className="menu_block_item_select"
+          onChange={(e) => {
+            onSelect(e.target.value);
+          }}
+        >
+          {options.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+      </div>
+    );
+  }, []);
+
+  const menus = useMemo(() => {
+    return [
+      menu('Amount of cash registers', ['1', '2', '3', '4'], (value: string) => {
+        dispatch(setAmountOfCashRegisters(value));
+      }),
+      menu('Amount of cooks', ['1', '2', '3', '4'], (value: string) => {
+        dispatch(setAmountOfCooks(value));
+      }),
+      menu('Cooking strategy', ['1:1', 'm:m'], (value: string) => {
+        dispatch(setCookingStrategy(value));
+      }),
+    ];
+  }, [dispatch, menu]);
+
   return (
     <>
       <div id="settingsWindow" className="settings-container unvisible">
@@ -19,31 +60,8 @@ export function Setting({}: ISettingProps) {
             <div className="settings-rope shady"></div>
           </div>
           <div className="main-settings-menu_block shady">
-            <div className="menu_block_item">
-              <h2 className="menu_block_item_heading">Amount of cash registers</h2>
-              <select className="menu_block_item_select">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-              </select>
-            </div>
-            <div className="menu_block_item">
-              <h2 className="menu_block_item_heading">Amount of cooks</h2>
-              <select className="menu_block_item_select">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-              </select>
-            </div>
-            <div className="menu_block_item">
-              <h2 className="menu_block_item_heading">Cooking strategy</h2>
-              <select className="menu_block_item_select">
-                <option value="1:1">1:1</option>
-                <option value="m:m">m:m</option>
-              </select>
-            </div>
+            {menus}
+
             <div className="menu_block_items_divider"></div>
             <div className="settings-buttons-panel">
               <button id="cancelSettingsButton" className="button simple-button">
