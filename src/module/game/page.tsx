@@ -5,9 +5,8 @@ import { OrbitControls } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { Kitchen } from '../components/kitchen';
 import { Physics } from '@react-three/cannon';
-import { CashRegister } from '../components/cash-register';
-import { Oven } from "../components/oven"
 import { useEffect } from 'react';
+import { Lobby } from '../components/lobby'
 
 // Створення компонента підлоги
 function Floor() {
@@ -54,16 +53,17 @@ export function Game({}: IPageProps) {
           <OrbitControls />
           <ambientLight intensity={0.2} />
           {/* #9240A1 */}
-          <pointLight position={[15, 10, 15]} intensity={500} color="white"/>
+          <pointLight position={[15, 10, 15]} intensity={500} color="#FE0071"/>
           <pointLight position={[-10, 10, -10]} intensity={500} color="#009999"/>
-          <pointLight position={[-15, 10, 15]} intensity={500} color="white"/>
+          <pointLight position={[-15, 10, 15]} intensity={500} color="#00FFF6"/>
 
           <Kitchen />
+          <Lobby />
           <Floor /> {/* Додаємо підлогу */}
-          <CashRegister position={[-4, 0, 6]}/>
+          {/* <CashRegister position={[-4, 0, 6]}/>
           <CashRegister position={[-3, 0, 6]}/>
           <CashRegister position={[-2, 0, 6]}/>
-          <CashRegister position={[-1, 0, 6]}/>
+          <CashRegister position={[-1, 0, 6]}/> */}
         </Physics>
       </Canvas>
     </div>
