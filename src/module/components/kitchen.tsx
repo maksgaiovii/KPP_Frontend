@@ -10,8 +10,8 @@ const kitchenConfig = {
     color: '#8F6F47',
   },
   walls: [
-    { position: [-5.5, 2, -0.5], rotation: [0, Math.PI / 2, 0], size: [11, 7, 1], color: '#5D76A6' },
-    { position: [0, 2, -5.5], rotation: [0, Math.PI, 0], size: [10, 7, 1], color: '#5D76A6' },
+    { position: [-5.5, 2, 4.5], rotation: [0, Math.PI / 2, 0], size: [21, 7, 1], color: '#2F4F4F' },
+    { position: [0, 2, -5.5], rotation: [0, Math.PI, 0], size: [10, 7, 1], color: '#2F4F4F' },
   ],
   table: {
     position: [2, 0.4, 2],
@@ -23,10 +23,10 @@ const kitchenConfig = {
     topPosition: [2, 0.8, 2],
   },
   ovens: [
-    { position: [-2, 0, -4] },
-    { position: [4, 0, -4] },
-    { position: [0, 0, -4] },
-    { position: [2, 0, -4] },
+    { position: [-2, 0, -4.5] },
+    { position: [4, 0, -4.5] },
+    { position: [0, 0, -4.5] },
+    { position: [2, 0, -4.5] },
   ],
   barCounter: {
     top: {
@@ -36,8 +36,8 @@ const kitchenConfig = {
     },
   },
   ceiling: {
-    position: [-0.5, 5.75, -0.5],
-    size: [11, 0.5, 11],
+    position: [-0.5, 5.75, 4.5],
+    size: [11, 0.5, 21],
     color: '#D1D1D1',
   },
 } as any;
