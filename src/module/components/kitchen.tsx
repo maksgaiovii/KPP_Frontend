@@ -3,7 +3,6 @@
 
 import { Euler, Vector3 } from '@react-three/fiber';
 import { Chef } from './chef';
-import { Collidable } from './colidable';
 
 const kitchenConfig = {
   floor: {
@@ -39,55 +38,31 @@ export const Kitchen = () => {
     <>
       {/* Платформа кухні */}
 
-      <Collidable fn={() => kitchenConfig.floor}>
-        {({ refference }) => (
-          <mesh
-            ref={refference}
-            position={kitchenConfig.floor.position as Vector3}
-            rotation={kitchenConfig.floor.rotation as Euler}
-          >
-            <boxGeometry args={kitchenConfig.floor.size as any} />
-            <meshMatcapMaterial color={kitchenConfig.floor.color} />
-          </mesh>
-        )}
-      </Collidable>
+      <mesh position={kitchenConfig.floor.position as Vector3} rotation={kitchenConfig.floor.rotation as Euler}>
+        <boxGeometry args={kitchenConfig.floor.size as any} />
+        <meshMatcapMaterial color={kitchenConfig.floor.color} />
+      </mesh>
 
       {/* Стіні кухні */}
-      {kitchenConfig.walls.map((wall, index) => (
-        <Collidable key={index} fn={() => wall}>
-          {({ refference }) => (
-            <mesh ref={refference} position={wall.position as Vector3} rotation={wall.rotation as Euler}>
-              <boxGeometry args={wall.size as any} />
-              <meshMatcapMaterial color={wall.color} />
-            </mesh>
-          )}
-        </Collidable>
+      {kitchenConfig.walls.map((wall: any, index: number) => (
+        <mesh key={index} position={wall.position as Vector3} rotation={wall.rotation as Euler}>
+          <boxGeometry args={wall.size as any} />
+          <meshMatcapMaterial color={wall.color} />
+        </mesh>
       ))}
 
-      {/* Столик посередині кухні */}
-      <Collidable fn={() => kitchenConfig.table}>
-        {({ refference }) => (
-          <mesh
-            ref={refference}
-            position={kitchenConfig.table.position as Vector3}
-            rotation={kitchenConfig.table.rotation as Euler}
-          >
-            <boxGeometry args={kitchenConfig.table.size as any} />
-            <meshMatcapMaterial color={kitchenConfig.table.color} />
-          </mesh>
-        )}
-      </Collidable>
+      {/* Стіл */}
+      <mesh position={kitchenConfig.table.position as Vector3} rotation={kitchenConfig.table.rotation as Euler}>
+        <boxGeometry args={kitchenConfig.table.size as any} />
+        <meshMatcapMaterial color={kitchenConfig.table.color} />
+      </mesh>
 
       {/* Пічки вздовж стін */}
-      {kitchenConfig.ovens.map((oven, index) => (
-        <Collidable key={index} fn={() => oven}>
-          {({ refference }) => (
-            <mesh ref={refference} position={oven.position as Vector3} rotation={oven.rotation as Euler}>
-              <boxGeometry args={oven.size as any} />
-              <meshMatcapMaterial color={oven.color} />
-            </mesh>
-          )}
-        </Collidable>
+      {kitchenConfig.ovens.map((oven: any, index: number) => (
+        <mesh key={index} position={oven.position as Vector3} rotation={oven.rotation as Euler}>
+          <boxGeometry args={oven.size as any} />
+          <meshMatcapMaterial color={oven.color} />
+        </mesh>
       ))}
 
       <Chef />

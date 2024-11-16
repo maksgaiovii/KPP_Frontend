@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/no-unknown-property */
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import { useSphere } from '@react-three/cannon';
 
 const chefConfig = {
   position: [3, 1, 3],
@@ -14,7 +13,7 @@ const chefConfig = {
 } as any;
 
 export const Chef = () => {
-  const [chefRef, api] = useSphere(() => chefConfig);
+  const chefRef = useRef<THREE.Mesh>(null);
   const [target, setTarget] = useState<[number, number, number] | null>(null);
   const speed = 0.05;
 
@@ -25,14 +24,10 @@ export const Chef = () => {
       const direction = targetPosition.sub(chefPosition).normalize();
       const distance = chefPosition.distanceTo(targetPosition);
 
-      if (distance > speed) {
-        api.position.set(
-          chefPosition.x + direction.x * speed,
-          chefPosition.y + direction.y * speed,
-          chefPosition.z + direction.z * speed,
-        );
+      if (distance > 0.1) {
+        chefRef.current.position.add(direction.multiplyScalar(speed));
       } else {
-        api.position.set(...target);
+        setTarget(null);
       }
     }
   });
@@ -44,7 +39,7 @@ export const Chef = () => {
   return (
     <>
       {/* Кухар у вигляді кулі */}
-      <mesh ref={chefRef as any} onClick={moveToTable}>
+      <mesh ref={chefRef} onClick={moveToTable}>
         <sphereGeometry args={chefConfig.args} />
         <meshMatcapMaterial color={chefConfig.color} />
       </mesh>

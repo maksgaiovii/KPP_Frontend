@@ -12,7 +12,6 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@react-three/cannon": "^6.6.0",
     "@react-three/drei": "^9.116.2",
     "@react-three/fiber": "^8.17.10",
     "@reduxjs/toolkit": "^2.3.0",
