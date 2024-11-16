@@ -9,11 +9,11 @@ const kitchenConfig = {
     position: [0, -0.5, 0],
     rotation: [0, -Math.PI / 2, 0],
     size: [10, 1, 10],
-    color: 'gray',
+    color: '#8F6F47',
   },
   walls: [
-    { position: [-5, 1.5, 0], rotation: [0, Math.PI / 2, 0], size: [10, 3, 1], color: 'lightblue' },
-    { position: [0, 1.5, -5], rotation: [0, Math.PI, 0], size: [10, 3, 1], color: 'lightblue' },
+    { position: [-5, 1.5, 0], rotation: [0, Math.PI / 2, 0], size: [10, 3, 1], color: '#5D76A6' },
+    { position: [0, 1.5, -5], rotation: [0, Math.PI, 0], size: [10, 3, 1], color: '#5D76A6' },
   ],
   table: {
     position: [1, 0.5, 1], // Центр кухні

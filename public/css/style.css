@@ -126,7 +126,7 @@ body {
 }
 
 .welcome-body {
-  background-image: url('../img/welcome_page_bg.png');
+  /* background-image: url('../img/welcome_page_bg.png'); */
   background-attachment: fixed;
   background-size: cover;
   background-repeat: no-repeat;
