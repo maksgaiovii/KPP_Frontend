@@ -1,8 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react/no-unknown-property */
-
 import { Euler, Vector3 } from '@react-three/fiber';
 import { Chef } from './chef';
+import { Oven } from './oven';  // Імпортуємо компонент Oven
 
 const kitchenConfig = {
   floor: {
@@ -12,32 +10,37 @@ const kitchenConfig = {
     color: '#8F6F47',
   },
   walls: [
-    { position: [-5, 1.5, 0], rotation: [0, Math.PI / 2, 0], size: [10, 3, 1], color: '#5D76A6' },
-    { position: [0, 1.5, -5], rotation: [0, Math.PI, 0], size: [10, 3, 1], color: '#5D76A6' },
+    { position: [-5.5, 2, -0.5], rotation: [0, Math.PI / 2, 0], size: [11, 7, 1], color: '#5D76A6' },
+    { position: [0, 2, -5.5], rotation: [0, Math.PI, 0], size: [10, 7, 1], color: '#5D76A6' },
   ],
   table: {
-    position: [1, 0.5, 1], // Центр кухні
-    size: [3, 1, 3],
-    color: 'brown',
+    position: [2, 0.4, 2], // Центр кухні
+    size: [2.5, 0.7, 2.5], // Розміри для основи
+    baseColor: '#673033', // Колір для основи стола
+    topColor: 'white',  // Колір для верхньої частини стола
     rotation: [0, 0, 0],
+    topSize: [3, 0.2, 3], // Розміри для верхньої частини
+    topPosition: [2, 0.8, 2], // Позиція верхньої частини (піднята над основою)
   },
   ovens: [
-    { position: [-4, 0.5, -2] },
-    { position: [-4, 0.5, 4] },
-    { position: [-4, 0.5, 0] },
-    { position: [-4, 0.5, 2] },
-    { position: [-2, 0.5, -4] },
-    { position: [4, 0.5, -4] },
-    { position: [0, 0.5, -4] },
-    { position: [2, 0.5, -4] },
-  ].map((oven) => ({ ...oven, size: [1, 1, 1], color: 'gray', rotation: [0, 0, 0] })),
+    { position: [-2, 0, -4] },
+    { position: [4, 0, -4] },
+    { position: [0, 0, -4] },
+    { position: [2, 0, -4] },
+  ],
+  barCounter: {
+    top: {
+      position: [-4.3, 1.25, 0.4], // Позиція верхньої частини барної стійки (піднята)
+      size: [1.4, 0.2, 9.2], // Розміри верхньої частини
+      color: '#C39B6E', // Колір верхньої частини
+    },
+  },
 } as any;
 
 export const Kitchen = () => {
   return (
     <>
       {/* Платформа кухні */}
-
       <mesh position={kitchenConfig.floor.position as Vector3} rotation={kitchenConfig.floor.rotation as Euler}>
         <boxGeometry args={kitchenConfig.floor.size as any} />
         <meshMatcapMaterial color={kitchenConfig.floor.color} />
@@ -51,21 +54,28 @@ export const Kitchen = () => {
         </mesh>
       ))}
 
-      {/* Стіл */}
+      {/* Основа стола */}
       <mesh position={kitchenConfig.table.position as Vector3} rotation={kitchenConfig.table.rotation as Euler}>
         <boxGeometry args={kitchenConfig.table.size as any} />
-        <meshMatcapMaterial color={kitchenConfig.table.color} />
+        <meshMatcapMaterial color={kitchenConfig.table.baseColor} /> {/* Використовуємо колір для основи */}
       </mesh>
 
-      {/* Пічки вздовж стін */}
+      {/* Верхня частина стола */}
+      <mesh position={kitchenConfig.table.topPosition as Vector3} rotation={kitchenConfig.table.rotation as Euler}>
+        <boxGeometry args={kitchenConfig.table.topSize as any} />
+        <meshMatcapMaterial color={kitchenConfig.table.topColor} /> {/* Використовуємо колір для верхньої частини */}
+      </mesh>
+
+      {/* Печі вздовж стін */}
       {kitchenConfig.ovens.map((oven: any, index: number) => (
-        <mesh key={index} position={oven.position as Vector3} rotation={oven.rotation as Euler}>
-          <boxGeometry args={oven.size as any} />
-          <meshMatcapMaterial color={oven.color} />
-        </mesh>
+        <Oven key={index} position={oven.position as Vector3} rotation={oven.rotation as [number, number, number]} />
       ))}
 
-      <Chef />
+      {/* Верхня частина барної стійки */}
+      <mesh position={kitchenConfig.barCounter.top.position as Vector3}>
+        <boxGeometry args={kitchenConfig.barCounter.top.size as any} />
+        <meshMatcapMaterial color={kitchenConfig.barCounter.top.color} />
+      </mesh>
     </>
   );
 };
