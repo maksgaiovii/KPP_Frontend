@@ -1,27 +1,29 @@
+import { useSelector } from 'react-redux';
+import { cashRegister } from '../../constant';
+import { getCustomers } from '../../redux/reduser/game/customers';
+import { selectAmountOfCashRegisters } from '../../redux/reduser/setting';
 import { CashRegister } from './cash-register';
+import { Customer } from './customer';
 
 export const Lobby: React.FC = () => {
+  const count = useSelector(selectAmountOfCashRegisters);
+  const customers = useSelector(getCustomers);
+
   return (
     <>
-      <mesh position={[0, -0.5, 10]} rotation={[0, 0, 0]}>
-        <boxGeometry args={[10, 1, 10]} />
+      <mesh position={[0, -0.5, 12.5]} rotation={[0, 0, 0]}>
+        <boxGeometry args={[10, 1, 15]} />
         <meshStandardMaterial color="#8F6F47" />
 
-        <CashRegister position={[-3, 1.5, -2]} />
-        <CashRegister position={[-3, 1.5, 1]} />
-        <CashRegister position={[-3, 1.5, 4]} />
+        {cashRegister.positions.slice(0, Number(count)).map((position, index) => (
+          <CashRegister position={position} key={'csre' + index} />
+        ))}
 
-        <CashRegister position={[3, 1.5, -2]} />
-        <CashRegister position={[3, 1.5, 1]} />
-        <CashRegister position={[3, 1.5, 4]} />
+        {/* draw basl */}
 
-        <pointLight position={[-3, 1, -2]} intensity={6} color="white" />
-        <pointLight position={[-3, 1, 1]} intensity={6} color="white" />
-        <pointLight position={[-3, 1, 4]} intensity={6} color="white" />
-
-        <pointLight position={[3, 1, -2]} intensity={6} color="white" />
-        <pointLight position={[3, 1, 1]} intensity={6} color="white" />
-        <pointLight position={[3, 1, 4]} intensity={6} color="white" />
+        {customers.map((customer, index) => (
+          <Customer key={'customer' + index} {...customer} />
+        ))}
 
         <mesh position={[0, 1.1, -4]} rotation={[0, 0, 0]}>
           <boxGeometry args={[10, 1.25, 0.5]} />

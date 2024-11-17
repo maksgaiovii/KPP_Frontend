@@ -14,6 +14,7 @@ export function Setting() {
           onChange={(e) => {
             onSelect(e.target.value);
           }}
+          defaultValue={options[options.length - 1]}
         >
           {options.map((option) => (
             <option key={option + '' + header} value={option}>
@@ -26,7 +27,7 @@ export function Setting() {
   }, []);
 
   const menus = useMemo(() => {
-    const arr = Array.from({ length: 8 })
+    const arr = Array.from({ length: 6 })
       .map((_, i) => i + 1)
       .map(String);
 

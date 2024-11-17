@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState } from 'react';
 import { Text } from '@react-three/drei';
+import { Vector3 } from '@react-three/fiber';
 
 interface ButtonWithTextProps {
   position: [number, number, number];
@@ -30,7 +31,7 @@ const ButtonWithText: React.FC<ButtonWithTextProps> = ({ position, text, color, 
 };
 
 interface CashRegisterProps {
-  position: [number, number, number];
+  position: Vector3;
 }
 
 export const CashRegister: React.FC<CashRegisterProps> = ({ position }: CashRegisterProps) => {
@@ -107,6 +108,7 @@ export const CashRegister: React.FC<CashRegisterProps> = ({ position }: CashRegi
       {/* Buttons */}
       <ButtonWithText position={[-0.2, -0.17, 0.17]} text="Order" color="#06d6a0" onClick={handleOrder} />
       <ButtonWithText position={[0.2, -0.17, 0.17]} text="Cancel" color="#ff0054" onClick={handleCancel} />
+      <pointLight position={[0, 1, 0]} intensity={6} color="white" />
     </group>
   );
 };

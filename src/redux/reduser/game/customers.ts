@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { cashRegister } from '../../../constant';
 import { ICustomer } from '../../../types/customer';
 
 export interface ICustomerState {
@@ -6,7 +7,15 @@ export interface ICustomerState {
 }
 
 export const initialMenuState: ICustomerState = {
-  customers: [],
+  customers: cashRegister.avaibleQueuePositions
+    .flat()
+    .filter(() => Math.random() > 0.8)
+    .map(
+      (position) =>
+        ({
+          position,
+        }) as ICustomer,
+    ),
 };
 
 const customerSlice = createSlice({

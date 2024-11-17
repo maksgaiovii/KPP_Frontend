@@ -40,11 +40,7 @@ export function Game() {
         <pointLight position={[-15, 10, 15]} intensity={500} color="#00FFF6" />
         <Kitchen />
         <Lobby />
-        <Floor /> {/* Додаємо підлогу */}
-        {/* <CashRegister position={[-4, 0, 6]}/>
-          <CashRegister position={[-3, 0, 6]}/>
-          <CashRegister position={[-2, 0, 6]}/>
-          <CashRegister position={[-1, 0, 6]}/> */}
+        <Floor />
       </Canvas>
     </div>
   );

@@ -7,9 +7,9 @@ export interface SettingState {
 }
 
 export const initialSettingState: SettingState = {
-  amountOfCashRegisters: '1',
-  amountOfCooks: '1',
-  cookingStrategy: '1:1',
+  amountOfCashRegisters: '6',
+  amountOfCooks: '6',
+  cookingStrategy: 'm:m',
 };
 
 const settingSlice = createSlice({
@@ -26,8 +26,14 @@ const settingSlice = createSlice({
       state.cookingStrategy = action.payload;
     },
   },
+  selectors: {
+    selectAmountOfCashRegisters: (state: SettingState) => state.amountOfCashRegisters,
+    selectAmountOfCooks: (state: SettingState) => state.amountOfCooks,
+    selectCookingStrategy: (state: SettingState) => state.cookingStrategy,
+  },
 });
 
 export const { setAmountOfCashRegisters, setAmountOfCooks, setCookingStrategy } = settingSlice.actions;
+export const { selectAmountOfCashRegisters, selectAmountOfCooks, selectCookingStrategy } = settingSlice.selectors;
 
 export default settingSlice.reducer;

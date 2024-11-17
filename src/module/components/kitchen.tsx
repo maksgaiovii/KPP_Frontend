@@ -9,7 +9,7 @@ const kitchenConfig = {
     color: '#8F6F47',
   },
   walls: [
-    { position: [-5.5, 2, 4.5], rotation: [0, Math.PI / 2, 0], size: [21, 7, 1], color: '#2F4F4F' },
+    { position: [-5.5, 2, 7], rotation: [0, Math.PI / 2, 0], size: [26, 7, 1], color: '#2F4F4F' },
     { position: [0, 2, -5.5], rotation: [0, Math.PI, 0], size: [10, 7, 1], color: '#2F4F4F' },
   ],
   table: {
@@ -35,8 +35,8 @@ const kitchenConfig = {
     },
   },
   ceiling: {
-    position: [-0.5, 5.75, 4.5],
-    size: [11, 0.5, 21],
+    position: [-0.5, 5.75, 7],
+    size: [11, 0.5, 26],
     color: '#D1D1D1',
   },
 } as any;
