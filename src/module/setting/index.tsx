@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
-import { setAmountOfCooks, setAmountOfCashRegisters, setCookingStrategy } from '../../redux/reduser/setting';
+import { setAmountOfCashRegisters, setAmountOfCooks, setCookingStrategy } from '../../redux/reduser/setting';
 
 export function Setting() {
   const dispatch = useDispatch();

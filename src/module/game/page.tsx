@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { OrbitControls } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
-import { Lobby } from '../components/lobby';
 import { Kitchen } from '../components/kitchen';
+import { Lobby } from '../components/lobby';
 
 export function Game() {
   useEffect(() => {

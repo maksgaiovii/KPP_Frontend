@@ -1,8 +1,8 @@
-import { Welcome } from './module/welcome';
-import { Setting } from './module/setting';
 import { useSelector } from 'react-redux';
-import { selectMenuState } from './redux/reduser/menu';
 import { Game } from './module/game/page';
+import { Setting } from './module/setting';
+import { Welcome } from './module/welcome';
+import { selectMenuState } from './redux/reduser/menu';
 
 function App() {
   const appState = useSelector(selectMenuState);

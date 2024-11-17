@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { setMenuState } from '../../redux/reduser/menu.js';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import * as util from '../../util/js/script.js';
-import { useDispatch } from 'react-redux';
-import { setMenuState } from '../../redux/reduser/menu.js';
 
 export function Welcome() {
   const dispatch = useDispatch();
