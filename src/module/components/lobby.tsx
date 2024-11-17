@@ -25,12 +25,12 @@ export const Lobby: React.FC = () => {
           <Customer key={'customer' + index} {...customer} />
         ))}
 
-        <mesh position={[0, 1.1, -4]} rotation={[0, 0, 0]}>
+        <mesh position={[0, 1.12, -7.5]} rotation={[0, 0, 0]}>
           <boxGeometry args={[10, 1.25, 0.5]} />
           <meshStandardMaterial color="#2F4F4F" />
         </mesh>
 
-        <mesh position={[0, 1.8, -4]} rotation={[0, 0, 0]}>
+        <mesh position={[0, 1.81, -7.5]} rotation={[0, 0, 0]}>
           <boxGeometry args={[10, 0.1, 1.5]} />
           <meshStandardMaterial color="#A52A2A" />
         </mesh>

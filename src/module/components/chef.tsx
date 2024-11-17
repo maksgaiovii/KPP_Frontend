@@ -1,45 +1,49 @@
-import { useRef, useState } from 'react';
-import { useFrame } from '@react-three/fiber';
-import * as THREE from 'three';
+import { useCallback, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useMoveAlongPoints } from '../../hook/useMoveAlongPoints';
+import { updateChef } from '../../redux/reduser/game/chefs';
+import { IChef } from '../../types/chef';
+import { getDistance } from '../../util';
 
-const chefConfig = {
-  position: [3, 1, 3],
-  args: [0.5],
-  color: 'yellow',
-  type: 'Static',
-  mass: 1,
-} as any;
+export const Chef = ({
+  position,
+  onClick,
+  ...rest
+}: Partial<IChef> & {
+  onClick?: () => [number, number, number][];
+}) => {
+  const [positions, setPositions] = useState<[number, number, number][]>([]);
+  const dispatch = useDispatch();
 
-export const Chef = () => {
-  const chefRef = useRef<THREE.Mesh>(null);
-  const [target, setTarget] = useState<[number, number, number] | null>(null);
-  const speed = 0.05;
-
-  useFrame(() => {
-    if (chefRef.current && target) {
-      const chefPosition = new THREE.Vector3().copy(chefRef.current.position);
-      const targetPosition = new THREE.Vector3(...target);
-      const direction = targetPosition.sub(chefPosition).normalize();
-      const distance = chefPosition.distanceTo(targetPosition);
-
-      if (distance > 0.1) {
-        chefRef.current.position.add(direction.multiplyScalar(speed));
-      } else {
-        setTarget(null);
-      }
-    }
+  const { objectRef } = useMoveAlongPoints(positions, 0.1, (index, points) => {
+    setTimeout(() => {
+      // без setTimeout утворюється зациклення, відкрий консоль
+      dispatch(updateChef({ ...rest, position: points[index] } as any));
+    }, 1);
+    console.log(`Досягнуто точки: ${index}`, points);
   });
 
-  const moveToTable = () => {
-    setTarget([-2, 1, -2]);
-  };
+  const handleClick = useCallback(() => {
+    setPositions((pev) => [...pev, ...(onClick?.() || [])]);
+  }, [onClick]);
+
+  const onDoubleClick = useCallback(() => {
+    setPositions((prev) => [...prev, prev[0]]);
+  }, []);
+
+  useEffect(() => {
+    if (position) {
+      if (!positions.some((pos) => getDistance(pos, position as any) < 0.5)) {
+        setPositions((pre) => [...pre, position as any]);
+      }
+    }
+  }, [position, positions]);
 
   return (
     <>
-      {/* Кухар у вигляді кулі */}
-      <mesh ref={chefRef} onClick={moveToTable}>
-        <sphereGeometry args={chefConfig.args} />
-        <meshMatcapMaterial color={chefConfig.color} />
+      <mesh ref={objectRef} onClick={handleClick} onDoubleClick={onDoubleClick}>
+        <sphereGeometry args={[0.32]} />
+        <meshMatcapMaterial color={'yello'} />
       </mesh>
     </>
   );

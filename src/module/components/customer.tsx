@@ -11,6 +11,7 @@ export const Customer = ({ position, ...rest }: ICustomer) => {
 
   const { objectRef } = useMoveAlongPoints(positions, 0.1, (index, points) => {
     setTimeout(() => {
+      // без setTimeout утворюється зациклення, відкрий консоль
       dispatch(updateCustomer({ ...rest, position: points[index] }));
     }, 1);
     console.log(`Досягнуто точки: ${index}`, points);
