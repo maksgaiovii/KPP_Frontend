@@ -1,5 +1,4 @@
 import { Euler, Vector3 } from '@react-three/fiber';
-import { Chef } from './chef';
 import { Oven } from './oven';
 
 const kitchenConfig = {

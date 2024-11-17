@@ -14,7 +14,6 @@ export function Welcome() {
     document.body.style.background = 'url(img/welcome_page_bg.png)';
     document.body.style.backgroundSize = 'cover';
     document.body.style.height = '100vh';
-
   }, []);
 
   return (

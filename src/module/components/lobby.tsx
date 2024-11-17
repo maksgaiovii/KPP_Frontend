@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { CashRegister } from './cash-register';
 
 export const Lobby: React.FC = () => {

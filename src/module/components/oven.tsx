@@ -23,19 +23,19 @@ const ovenConfig = {
     color: 'orange',
   },
   chimney: {
-    position: [0, 2.1, -0.4],  // Позиція димовідведення
-    rotation: [-0.4, 0, 0],    // Обертання димовідведення
-    size: [0.2, 1.0, 0.2],  // Розміри димовідведення
-    color: '#404040',        // Колір димовідведення
+    position: [0, 2.1, -0.4], // Позиція димовідведення
+    rotation: [-0.4, 0, 0], // Обертання димовідведення
+    size: [0.2, 1.0, 0.2], // Розміри димовідведення
+    color: '#404040', // Колір димовідведення
   },
 };
 
 interface OvenProps {
   position: Vector3;
-  rotation?: [number, number, number];  // Додаємо параметр rotation для повернення
+  rotation?: [number, number, number]; // Додаємо параметр rotation для повернення
 }
 
-export const Oven: React.FC<OvenProps> = ({position, rotation}) => {
+export const Oven: React.FC<OvenProps> = ({ position, rotation }) => {
   return (
     <group position={position} rotation={rotation}>
       {/* Base */}
@@ -66,8 +66,8 @@ export const Oven: React.FC<OvenProps> = ({position, rotation}) => {
       />
 
       {/* Chimney (Smoke Vent) */}
-      <mesh 
-        position={ovenConfig.chimney.position as Vector3} 
+      <mesh
+        position={ovenConfig.chimney.position as Vector3}
         rotation={ovenConfig.chimney.rotation as [number, number, number]} // Повертаємо димовідвід
       >
         <boxGeometry args={ovenConfig.chimney.size as [number, number, number]} />
