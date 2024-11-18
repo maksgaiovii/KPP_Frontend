@@ -8,6 +8,7 @@ export interface IOrderItem {
 }
 
 export interface IOrder {
+  id: string;
   createdAt: Date;
   orderItems: IOrderItem[];
   uncompletedOrderItems: IOrderItem[];

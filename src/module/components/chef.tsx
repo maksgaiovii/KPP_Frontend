@@ -8,6 +8,7 @@ import { getDistance } from '../../util';
 export const Chef = ({
   position,
   onClick,
+  goTo,
   ...rest
 }: Partial<IChef> & {
   onClick?: () => [number, number, number][];
@@ -38,6 +39,12 @@ export const Chef = ({
       }
     }
   }, [position, positions]);
+
+  useEffect(() => {
+    if (goTo) {
+      setPositions((prev) => [...prev, ...goTo]);
+    }
+  }, [goTo]);
 
   return (
     <>

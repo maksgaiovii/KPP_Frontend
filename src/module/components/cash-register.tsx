@@ -33,20 +33,10 @@ interface CashRegisterProps {
 }
 
 export const CashRegister: React.FC<CashRegisterProps> = ({ position }: CashRegisterProps) => {
-  /*
-  
-  
-    Тіпа обробники кліків користувача,
-    які нічого не роблять, а просто існують :)
-  
-  
-  */
   const handleOrder = () => alert('Order placed');
   const handleCancel = () => alert('Order cancelled');
 
-  const handlePizzaSelection = (_pizza: string) => {
-    // setSelectedPizza(pizza);
-  };
+  const handlePizzaSelection = (_pizza: string) => {};
 
   return (
     <group position={position}>

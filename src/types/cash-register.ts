@@ -7,4 +7,5 @@ export interface ICashRegister extends I3DObject {
   customer?: ICustomer;
   customersQueue?: ICustomer[];
   available: [number, number, number][];
+  outPositions: [number, number, number][];
 }

@@ -34,7 +34,7 @@ export interface ChefChangeStatus extends IEvent {
 
 export interface DishPreparationStarted extends IEvent {
   dish: IPizza;
-  cood: IChef;
+  cook: IChef;
   nextDishState: IPizza['state'];
 }
 

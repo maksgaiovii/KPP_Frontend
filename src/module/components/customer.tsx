@@ -5,14 +5,14 @@ import { updateCustomer } from '../../redux/reduser/game/customers';
 import { ICustomer } from '../../types/customer';
 import { getDistance } from '../../util';
 
-export const Customer = ({ position, ...rest }: ICustomer) => {
+export const Customer = ({ position, goTo, ...rest }: ICustomer) => {
   const [positions, setPositions] = useState<[number, number, number][]>([]);
   const dispatch = useDispatch();
 
   const { objectRef } = useMoveAlongPoints(positions, 0.1, (index, points) => {
     setTimeout(() => {
       // без setTimeout утворюється зациклення, відкрий консоль
-      dispatch(updateCustomer({ ...rest, position: points[index] }));
+      dispatch(updateCustomer({ ...rest, position: points[index] } as any));
     }, 1);
     console.log(`Досягнуто точки: ${index}`, points);
   });
@@ -28,6 +28,12 @@ export const Customer = ({ position, ...rest }: ICustomer) => {
       }
     }
   }, [position, positions]);
+
+  useEffect(() => {
+    if (goTo) {
+      setPositions((prev) => [...prev, ...goTo]);
+    }
+  }, [goTo]);
 
   return (
     <>
