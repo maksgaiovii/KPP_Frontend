@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // export interface CustomerCreated extends IEvent {
 //     customer: ICustomer;
@@ -9,9 +8,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { cashRegister, chefs } from '../constant';
 import { addCashRegister, getCashReisters } from '../redux/reduser/game/cash-register';
 import { addChef } from '../redux/reduser/game/chefs';
+import { addCustomer, getCustomers } from '../redux/reduser/game/customers';
 import { ICashRegister } from '../types/cash-register';
 import { IChef } from '../types/chef';
 import * as events from '../types/events';
+import { getDistance } from '../util';
 
 //   export interface CustomerInQueue extends IEvent {
 //     customer: ICustomer;
@@ -46,8 +47,8 @@ import * as events from '../types/events';
 
 export const useManager = () => {
   const dispatch = useDispatch();
-  const cashRegisters = useSelector(getCashReisters);
-  console.log('🚀 ~ useManager ~ cashRegisters:', cashRegisters);
+  const lobbyCashRegisters = useSelector(getCashReisters);
+  const customers = useSelector(getCustomers);
 
   const onGameStart = useCallback(
     (setting: any) => {
@@ -68,7 +69,33 @@ export const useManager = () => {
     [dispatch],
   );
   const onCustomerCreated = useCallback((_event: events.CustomerCreated) => {}, []);
-  const onCustomerInQueue = useCallback((_event: events.CustomerInQueue) => {}, []);
+  const onCustomerInQueue = useCallback(
+    (event: events.CustomerInQueue) => {
+      const cash = lobbyCashRegisters.find((cash) => cash.id === event.cashRegister.id);
+      if (cash) {
+        const freePosition = cash.available.find(
+          (pos) => !customers.some(({ position }) => getDistance(position as any, pos) < 0.5),
+        );
+
+        if (freePosition) {
+          dispatch(
+            addCustomer({
+              ...event.customer,
+              position: freePosition,
+              cashRegisterId: cash.uuid,
+            }),
+          );
+        } else {
+          setTimeout(() => {
+            onCustomerInQueue(event);
+          }, 9000);
+        }
+      } else {
+        console.error('Cash register not found');
+      }
+    },
+    [customers, dispatch, lobbyCashRegisters],
+  );
   const onOrderAccepted = useCallback((_event: events.OrderAccepted) => {}, []);
   const onOrderCompleted = useCallback((_event: events.OrderCompleted) => {}, []);
   const onChefChangeStatus = useCallback((_event: events.ChefChangeStatus) => {}, []);
