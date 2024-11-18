@@ -5,9 +5,9 @@
 //   }
 
 import { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { cashRegister, chefs } from '../constant';
-import { addCashRegister } from '../redux/reduser/game/cash-register';
+import { addCashRegister, getCashReisters } from '../redux/reduser/game/cash-register';
 import { addChef } from '../redux/reduser/game/chefs';
 import { ICashRegister } from '../types/cash-register';
 import { IChef } from '../types/chef';
@@ -46,6 +46,8 @@ import * as events from '../types/events';
 
 export const useManager = () => {
   const dispatch = useDispatch();
+  const cashRegisters = useSelector(getCashReisters)
+
 
   const onGameStart = useCallback(
     (setting: any) => {
@@ -66,7 +68,8 @@ export const useManager = () => {
     [dispatch],
   );
   const onCustomerCreated = useCallback((_event: events.CustomerCreated) => {}, []);
-  const onCustomerInQueue = useCallback((_event: events.CustomerInQueue) => {}, []);
+  const onCustomerInQueue = useCallback((_event: events.CustomerInQueue) => {
+  }, []);
   const onOrderAccepted = useCallback((_event: events.OrderAccepted) => {}, []);
   const onOrderCompleted = useCallback((_event: events.OrderCompleted) => {}, []);
   const onChefChangeStatus = useCallback((_event: events.ChefChangeStatus) => {}, []);

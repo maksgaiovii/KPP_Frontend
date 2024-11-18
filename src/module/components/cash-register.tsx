@@ -35,7 +35,6 @@ interface CashRegisterProps {
 }
 
 export const CashRegister: React.FC<CashRegisterProps> = ({ position }: CashRegisterProps) => {
-  const [orderStatus, setOrderStatus] = useState<string>('');
 
   /*
   
@@ -48,7 +47,7 @@ export const CashRegister: React.FC<CashRegisterProps> = ({ position }: CashRegi
   const handleOrder = () => alert('Order placed');
   const handleCancel = () => alert('Order cancelled');
 
-  const handlePizzaSelection = (pizza: string) => {
+  const handlePizzaSelection = (_pizza: string) => {
     // setSelectedPizza(pizza);
   };
 
