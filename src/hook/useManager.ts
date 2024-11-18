@@ -46,8 +46,7 @@ import * as events from '../types/events';
 
 export const useManager = () => {
   const dispatch = useDispatch();
-  const cashRegisters = useSelector(getCashReisters)
-
+  const cashRegisters = useSelector(getCashReisters);
 
   const onGameStart = useCallback(
     (setting: any) => {
@@ -68,8 +67,7 @@ export const useManager = () => {
     [dispatch],
   );
   const onCustomerCreated = useCallback((_event: events.CustomerCreated) => {}, []);
-  const onCustomerInQueue = useCallback((_event: events.CustomerInQueue) => {
-  }, []);
+  const onCustomerInQueue = useCallback((_event: events.CustomerInQueue) => {}, []);
   const onOrderAccepted = useCallback((_event: events.OrderAccepted) => {}, []);
   const onOrderCompleted = useCallback((_event: events.OrderCompleted) => {}, []);
   const onChefChangeStatus = useCallback((_event: events.ChefChangeStatus) => {}, []);

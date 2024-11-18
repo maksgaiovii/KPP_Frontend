@@ -35,7 +35,6 @@ interface CashRegisterProps {
 }
 
 export const CashRegister: React.FC<CashRegisterProps> = ({ position }: CashRegisterProps) => {
-
   /*
   
   
