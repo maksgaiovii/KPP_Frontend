@@ -1,6 +1,4 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useState } from 'react';
 import { Text } from '@react-three/drei';
 import { Vector3 } from '@react-three/fiber';
 
