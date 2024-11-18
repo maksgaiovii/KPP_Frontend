@@ -35,7 +35,7 @@ export function Setting() {
       menu('Amount of cash registers', arr, (value: string) => {
         dispatch(setAmountOfCashRegisters(value));
       }),
-      menu('Amount of cooks', arr, (value: string) => {
+      menu('Amount of cooks', ['1', '2', '3', '4'], (value: string) => {
         dispatch(setAmountOfCooks(value));
       }),
       menu('Cooking strategy', ['1:1', 'm:m'], (value: string) => {

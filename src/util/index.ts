@@ -1,7 +1,10 @@
-export const getAvaibleQueuePositions = (positions: [number, number, number][], maxSceneZ: number) =>
+export const getAvaibleQueuePositions = (
+  positions: [number, number, number][],
+  maxSceneZ: number,
+): [number, number, number][][] =>
   positions.map((position, index, { length }) => {
     const arr = getPathToRightOrLeft([0, 0, 0], index, length + 1, Math.sign(position[0]));
-    const last = [...(arr[arr.length - 1] || [0, 0, 0])];
+    const last = [...(arr[arr.length - 1] || [0, 0, 0])] as [number, number, number];
     return [
       ...arr,
       ...Array.from({ length: maxSceneZ - position[2] }, (_, i) => [last[0], last[1], last[2] + i + 1]),

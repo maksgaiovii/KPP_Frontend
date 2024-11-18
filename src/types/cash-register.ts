@@ -3,7 +3,8 @@ import { ICustomer } from './customer';
 
 export interface ICashRegister extends I3DObject {
   uuid: string;
-  status: 'free' | 'busy';
+  status?: 'free' | 'busy';
   customer?: ICustomer;
-  customersQueue: ICustomer[];
+  customersQueue?: ICustomer[];
+  available: [number, number, number][];
 }

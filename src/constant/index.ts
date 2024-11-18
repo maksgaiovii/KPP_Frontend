@@ -2,7 +2,7 @@ import { getAvaibleQueuePositions } from '../util';
 
 const maxSceneZ = 7;
 
-const positions = [
+const cashPositions = [
   [-3, 1.5, -4],
   [3, 1.5, -4],
   [-3, 1.5, -1],
@@ -12,9 +12,9 @@ const positions = [
 ] as [number, number, number][];
 
 export const cashRegister = {
-  positions: positions,
+  positions: cashPositions,
   avaibleQueuePositions: getAvaibleQueuePositions(
-    positions.map((position) => [position[0], position[1], position[2] + 1]),
+    cashPositions.map((position) => [position[0], position[1], position[2] + 1]),
     maxSceneZ,
   ),
 };

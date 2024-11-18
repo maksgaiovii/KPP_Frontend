@@ -8,7 +8,7 @@ export interface SettingState {
 
 export const initialSettingState: SettingState = {
   amountOfCashRegisters: '6',
-  amountOfCooks: '6',
+  amountOfCooks: '4',
   cookingStrategy: 'm:m',
 };
 
