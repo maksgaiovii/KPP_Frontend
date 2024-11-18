@@ -47,6 +47,7 @@ import * as events from '../types/events';
 export const useManager = () => {
   const dispatch = useDispatch();
   const cashRegisters = useSelector(getCashReisters);
+  console.log('🚀 ~ useManager ~ cashRegisters:', cashRegisters);
 
   const onGameStart = useCallback(
     (setting: any) => {
