@@ -1,18 +1,11 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useMoveAlongPoints } from '../../hook/useMoveAlongPoints';
 import { updateChef } from '../../redux/reduser/game/chefs';
 import { IChef } from '../../types/chef';
 import { getDistance } from '../../util';
 
-export const Chef = ({
-  position,
-  onClick,
-  goTo,
-  ...rest
-}: Partial<IChef> & {
-  onClick?: () => [number, number, number][];
-}) => {
+export const Chef = ({ position, goTo, ...rest }: Partial<IChef>) => {
   const [positions, setPositions] = useState<[number, number, number][]>([]);
   const dispatch = useDispatch();
 
@@ -21,16 +14,7 @@ export const Chef = ({
       // без setTimeout утворюється зациклення, відкрий консоль
       dispatch(updateChef({ ...rest, position: points[index] } as any));
     }, 1);
-    console.log(`Досягнуто точки: ${index}`, points);
   });
-
-  const handleClick = useCallback(() => {
-    setPositions((pev) => [...pev, ...(onClick?.() || [])]);
-  }, [onClick]);
-
-  const onDoubleClick = useCallback(() => {
-    setPositions((prev) => [...prev, prev[0]]);
-  }, []);
 
   useEffect(() => {
     if (position) {
@@ -48,7 +32,7 @@ export const Chef = ({
 
   return (
     <>
-      <mesh ref={objectRef} onClick={handleClick} onDoubleClick={onDoubleClick}>
+      <mesh ref={objectRef}>
         <sphereGeometry args={[0.32]} />
         <meshMatcapMaterial color={'yello'} />
       </mesh>

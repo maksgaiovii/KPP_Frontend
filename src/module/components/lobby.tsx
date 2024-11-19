@@ -1,12 +1,11 @@
 import { useSelector } from 'react-redux';
-import { cashRegister } from '../../constant';
+import { getCashRegisters } from '../../redux/reduser/game/cash-register';
 import { getCustomers } from '../../redux/reduser/game/customers';
-import { selectAmountOfCashRegisters } from '../../redux/reduser/setting';
 import { CashRegister } from './cash-register';
 import { Customer } from './customer';
 
 export const Lobby: React.FC = () => {
-  const count = useSelector(selectAmountOfCashRegisters);
+  const cashRegister = useSelector(getCashRegisters);
   const customers = useSelector(getCustomers);
 
   return (
@@ -15,12 +14,9 @@ export const Lobby: React.FC = () => {
         <boxGeometry args={[10, 1, 15]} />
         <meshStandardMaterial color="#8F6F47" />
 
-        {cashRegister.positions.slice(0, Number(count)).map((position, index) => (
-          <CashRegister position={position} key={'csre' + index} />
+        {cashRegister.map((cash: any, index) => (
+          <CashRegister {...cash} key={'csre' + index} />
         ))}
-
-        {/* draw basl */}
-
         {customers.map((customer, index) => (
           <Customer key={'customer' + index} {...customer} />
         ))}

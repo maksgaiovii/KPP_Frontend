@@ -19,7 +19,7 @@ export const cashRegister = {
   ),
   outPositions: cashPositions.map((position) => [
     [position[0] + Math.sign(position[0]), position[1], position[2]],
-    [position[0] + Math.sign(position[0]), position[1], position[2] + maxSceneZ],
+    [position[0] + Math.sign(position[0]), position[1], 10],
   ]),
 };
 
@@ -35,6 +35,12 @@ export const chefs = {
     [4, 0, -3.5],
     [0, 0, -3.5],
     [2, 0, -3.5],
+  ] as [number, number, number][],
+  final: [
+    [-2, 1, 4],
+    [4, 1, 4],
+    [-3, 1, 4],
+    [2, 1, 0],
   ] as [number, number, number][],
 };
 

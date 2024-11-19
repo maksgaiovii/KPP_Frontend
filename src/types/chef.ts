@@ -5,4 +5,5 @@ export interface IChef extends I3DObject {
   status: 'free' | 'busy' | 'paused';
   near: 'table' | 'oven' | 'counter';
   pizza?: IPizza;
+  index: number;
 }

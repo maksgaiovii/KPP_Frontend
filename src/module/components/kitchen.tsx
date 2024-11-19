@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 import { Euler, Vector3 } from '@react-three/fiber';
-import { chefs } from '../../constant';
-import { selectAmountOfCooks } from '../../redux/reduser/setting';
+import { chefs as chefsConstant } from '../../constant';
+import { getChefs } from '../../redux/reduser/game/chefs';
 import { Chef } from './chef';
 import { Oven } from './oven';
 
@@ -25,7 +25,7 @@ const kitchenConfig = {
     topSize: [3, 0.2, 3],
     topPosition: [2, 0.8, 2],
   },
-  ovens: chefs.ovenPositions.map(([p1, p2, p3]: any) => ({ position: [p1, p2, p3 - 1] })),
+  ovens: chefsConstant.ovenPositions.map(([p1, p2, p3]: any) => ({ position: [p1, p2, p3 - 1] })),
   barCounter: {
     top: {
       position: [-4.3, 1.25, 0.4],
@@ -41,12 +41,13 @@ const kitchenConfig = {
 } as any;
 
 export const Kitchen = () => {
-  const count = useSelector(selectAmountOfCooks);
+  const chefs = useSelector(getChefs);
+  console.log(chefs, 'cfefs');
 
   return (
     <>
-      {chefs.positions.slice(0, Number(count)).map((position: any, index: number) => (
-        <Chef key={'chef' + index} position={position} onClick={() => [chefs.ovenPositions[index]]} />
+      {chefs.map((chef, index) => (
+        <Chef key={'chef' + index} {...chef} />
       ))}
 
       <mesh position={kitchenConfig.floor.position as Vector3} rotation={kitchenConfig.floor.rotation as Euler}>

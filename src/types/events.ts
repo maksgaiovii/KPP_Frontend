@@ -5,8 +5,15 @@ import { IOrder } from './order';
 import { IPizza } from './pizza';
 
 export interface IEvent {
-  name: string;
-  type: string;
+  name?: string;
+  type:
+    | 'customerCreated'
+    | 'customerInQueue'
+    | 'orderAccepted'
+    | 'orderCompleted'
+    | 'chefChangeStatus'
+    | 'dishPreparationStarted'
+    | 'dishPreparationCompleted';
 }
 
 export interface CustomerCreated extends IEvent {
@@ -33,7 +40,7 @@ export interface ChefChangeStatus extends IEvent {
 }
 
 export interface DishPreparationStarted extends IEvent {
-  dish: IPizza;
+  dish?: IPizza;
   cook: IChef;
   nextDishState: IPizza['state'];
 }

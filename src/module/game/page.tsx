@@ -1,10 +1,39 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { OrbitControls } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
+import { useStart } from '../../hook/useStart';
 import { Kitchen } from '../components/kitchen';
 import { Lobby } from '../components/lobby';
 
 export function Game() {
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [terminate, setTerminate] = useState(false);
+
+  useStart({ isPlaying, terminate });
+
+  useEffect(() => {
+    const onSpacePress = (event: KeyboardEvent) => {
+      if (event.code === 'Space') {
+        console.log('Space pressed');
+        setIsPlaying((prev) => !prev);
+      }
+    };
+
+    const onEscapePress = (event: KeyboardEvent) => {
+      if (event.code === 'Escape') {
+        setTerminate(true);
+      }
+    };
+
+    window.addEventListener('keydown', onSpacePress);
+    window.addEventListener('keydown', onEscapePress);
+
+    return () => {
+      window.removeEventListener('keydown', onSpacePress);
+      window.removeEventListener('keydown', onEscapePress);
+    };
+  }, []);
+
   useEffect(() => {
     try {
       document.body.style.background = 'url(img/game_bg.png)';

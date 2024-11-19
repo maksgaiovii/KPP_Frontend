@@ -14,7 +14,8 @@ const cashSlice = createSlice({
   initialState: initialCashState,
   reducers: {
     addCashRegister(state, action: PayloadAction<ICashRegister>) {
-      state.cashRegisters.push(JSON.parse(JSON.stringify(action.payload)));
+      if (!state.cashRegisters.find((cashRegister) => cashRegister.id === action.payload.id))
+        state.cashRegisters.push(JSON.parse(JSON.stringify(action.payload)));
     },
     removeCashRegisterById(state, action: PayloadAction<string | number>) {
       state.cashRegisters = state.cashRegisters.filter((cashRegister) => cashRegister.id !== action.payload);
@@ -29,10 +30,10 @@ const cashSlice = createSlice({
   selectors: {
     getCashRegisterById: (state: ICashState, id: string | number) =>
       state.cashRegisters.find((cashRegister) => cashRegister.id === id),
-    getCashReisters: (state: ICashState) => state.cashRegisters,
+    getCashRegisters: (state: ICashState) => state.cashRegisters,
   },
 });
 
 export const { addCashRegister, removeCashRegisterById, updateCashRegister } = cashSlice.actions;
-export const { getCashRegisterById, getCashReisters } = cashSlice.selectors;
+export const { getCashRegisterById, getCashRegisters } = cashSlice.selectors;
 export default cashSlice.reducer;

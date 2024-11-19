@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useMoveAlongPoints } from '../../hook/useMoveAlongPoints';
 import { updateCustomer } from '../../redux/reduser/game/customers';
@@ -14,12 +14,7 @@ export const Customer = ({ position, goTo, ...rest }: ICustomer) => {
       // без setTimeout утворюється зациклення, відкрий консоль
       dispatch(updateCustomer({ ...rest, position: points[index] } as any));
     }, 1);
-    console.log(`Досягнуто точки: ${index}`, points);
   });
-
-  const handleClick = useCallback(() => {
-    setPositions((pev) => [...pev, [0, 2, 0], [0, 2, 2], [0, 2, 4]]);
-  }, []);
 
   useEffect(() => {
     if (position) {
@@ -35,9 +30,12 @@ export const Customer = ({ position, goTo, ...rest }: ICustomer) => {
     }
   }, [goTo]);
 
+  // if (objectRef?.current?.position && objectRef.current.position.z < 8) return null;
+  if ((position as any)?.[2] > 8) return null;
+
   return (
     <>
-      <mesh ref={objectRef} onClick={handleClick}>
+      <mesh ref={objectRef}>
         <sphereGeometry args={[0.32]} />
         <meshMatcapMaterial color={'#0b132b'} />
       </mesh>

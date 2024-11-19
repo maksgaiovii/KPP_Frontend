@@ -6,7 +6,6 @@ import { selectMenuState } from './redux/reduser/menu';
 
 function App() {
   const appState = useSelector(selectMenuState);
-  console.log('appState', appState);
 
   if (appState === 'playing') {
     return <Game />;

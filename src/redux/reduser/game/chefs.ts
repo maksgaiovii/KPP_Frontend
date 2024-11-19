@@ -14,7 +14,8 @@ const chefSlice = createSlice({
   initialState: initialMenuState,
   reducers: {
     addChef(state, action: PayloadAction<IChef>) {
-      state.chefs.push(JSON.parse(JSON.stringify(action.payload)));
+      if (!state.chefs.find((chef) => chef.id === action.payload.id))
+        state.chefs.push(JSON.parse(JSON.stringify(action.payload)));
     },
     removeChefById(state, action: PayloadAction<string | number>) {
       state.chefs = state.chefs.filter((chef) => chef.id !== action.payload);
