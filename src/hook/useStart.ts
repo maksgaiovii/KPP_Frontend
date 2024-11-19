@@ -69,6 +69,7 @@ export const useStart = ({ isPlaying, terminate }: OnSartProps) => {
               onDishPreparationStarted(event);
               break;
           }
+          console.log('Obtain event', event);
           setEvents((prev) => prev.filter((_, idx) => idx !== eventIdx));
         }
       }
