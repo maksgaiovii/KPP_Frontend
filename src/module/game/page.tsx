@@ -4,6 +4,7 @@ import { Canvas } from '@react-three/fiber';
 import { useStart } from '../../hook/useStart';
 import { Kitchen } from '../components/kitchen';
 import { Lobby } from '../components/lobby';
+import '../../../public/css/gameControls.css'; // Імпортуємо стилі
 
 export function Game() {
   const [isPlaying, setIsPlaying] = useState(true);
@@ -48,20 +49,25 @@ export function Game() {
     };
   }, []);
 
+  const handleButtonClick = (action: string) => {
+    console.log(`${action} button clicked`);
+    // Add logic for each button action
+  };
+
   return (
     <div
       style={{
         width: '100vw',
         height: '100vh',
+        position: 'relative',
       }}
     >
       <Canvas
         camera={{ position: [15, 15, 15], fov: 75 }}
-        style={{ backgroundColor: 'black' }} // Задаємо чорний фон
+        style={{ backgroundColor: 'black' }}
       >
         <OrbitControls minPolarAngle={0} maxPolarAngle={Math.PI / 2} />
         <ambientLight intensity={0.2} />
-        {/* #9240A1 */}
         <pointLight position={[15, 10, 15]} intensity={500} color="#FE0071" />
         <pointLight position={[-10, 10, -10]} intensity={500} color="#009999" />
         <pointLight position={[-15, 10, 15]} intensity={500} color="#00FFF6" />
@@ -69,6 +75,34 @@ export function Game() {
         <Lobby />
         <Floor />
       </Canvas>
+
+      {/* Кнопки поверх Canvas */}
+      <div className="game-control-container">
+        <div
+          onClick={() => handleButtonClick('Play/Pause')}
+          className="game-control play-pause"
+        >
+          Play/Pause
+        </div>
+        <div
+          onClick={() => handleButtonClick('Terminate')}
+          className="game-control terminate"
+        >
+          Terminate
+        </div>
+        <div
+          onClick={() => handleButtonClick('Restart')}
+          className="game-control restart"
+        >
+          Restart
+        </div>
+        <div
+          onClick={() => handleButtonClick('Settings')}
+          className="game-control settings"
+        >
+          Settings
+        </div>
+      </div>
     </div>
   );
 }
