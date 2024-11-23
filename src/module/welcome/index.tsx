@@ -28,7 +28,6 @@ export function Welcome() {
             <button
               className="button priority-button"
               onClick={() => {
-                console.log('Start button clicked');
                 dispatch(setMenuState('playing'));
               }}
             >
