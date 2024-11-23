@@ -47,6 +47,26 @@ const chefs = constants.chefs.positions.map(
     }) as IChef,
 );
 
+const sendStartRequest = async () => {
+  try {
+    const response = await fetch('http://localhost:8080/simulation/start', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      console.log('Success:', data.message);
+    } else {
+      console.error('Error:', data.message);
+    }
+  } catch (error) {
+    console.error('Request failed', error);
+  }
+};
+
 const getChefs = (count: number | string) => chefs.slice(0, Number(count));
 const getCashRegisters = (count: number | string) => cashRegisters.slice(0, Number(count));
 
@@ -73,6 +93,8 @@ export const useStart = ({ isPlaying, terminate }: OnStartProps) => {
         chefs: getChefs(countOfCooks),
         cashRegisters: getCashRegisters(countOfCashRegisters),
       });
+
+      sendStartRequest();
     }
 
     if (terminate) {
