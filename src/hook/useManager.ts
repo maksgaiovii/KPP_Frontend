@@ -1,8 +1,12 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { cashRegister, chefs } from '../constant';
-import { addCashRegister, getCashRegisters } from '../redux/reduser/game/cash-register';
-import { addChef, getChefs, updateChef } from '../redux/reduser/game/chefs';
+import {
+  addCashRegister,
+  getCashRegisters,
+  removeCashRegisterById,
+} from '../redux/reduser/game/cash-register';
+import { addChef, getChefs, removeChefById, updateChef } from '../redux/reduser/game/chefs';
 import { addCustomer, getCustomers, updateCustomer } from '../redux/reduser/game/customers';
 import { ICashRegister } from '../types/cash-register';
 import { IChef } from '../types/chef';
@@ -37,7 +41,13 @@ export const useManager = () => {
   }, []);
   const onCustomerInQueue = useCallback(
     (event: events.CustomerInQueue) => {
-      const cash = lobbyCashRegisters.find((cash) => String(cash.id) == event.cashRegisterId);
+      let cash = lobbyCashRegisters.find((cash) => String(cash.id) == event.cashRegisterId);
+      if (!cash) {
+        cash = lobbyCashRegisters.find((cash) => typeof cash.id === 'number');
+        dispatch(addCashRegister({ ...cash, id: event.cashRegisterId } as any));
+        dispatch(removeCashRegisterById(cash?.id as any));
+      }
+
       if (cash) {
         const freePosition = cash.available.find(
           (pos) => !customers.some(({ position }) => getDistance(position as any, pos) < 0.5),
@@ -50,7 +60,7 @@ export const useManager = () => {
               order: null,
               status: 'in-queue',
               position: cash.available[cash.available.length - 1],
-              cashRegisterId: cash.id as any,
+              cashRegisterId: event.cashRegisterId,
             }),
           );
         } else {
@@ -113,7 +123,13 @@ export const useManager = () => {
   const onDishPreparationStarted = useCallback(
     (event: events.DishPreparationStarted) => {
       const { cookId, nextDishState } = event;
-      const chef = cooks.find((ch) => String(ch.id) === cookId);
+      let chef = cooks.find((ch) => String(ch.id) === cookId);
+      if (!chef) {
+        chef = cooks.find((ch) => typeof ch.id === 'number');
+        dispatch(addChef({ ...chef, id: cookId } as any));
+        dispatch(removeChefById(chef?.id as any));
+      }
+
       if (chef) {
         const newPosition = ['baking'].includes(nextDishState)
           ? chefs.ovenPositions[chef.index]
