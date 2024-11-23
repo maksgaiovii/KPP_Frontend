@@ -1,11 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as constants from '../constant';
 import { setMenuState } from '../redux/reduser/menu';
 import { selectAmountOfCashRegisters, selectAmountOfCooks } from '../redux/reduser/setting';
 import { ICashRegister } from '../types/cash-register';
 import { IChef } from '../types/chef';
-import { IEvent } from '../types/events';
 import { useManager } from './useManager';
 
 type OnStartProps = {
