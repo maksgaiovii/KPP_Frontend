@@ -66,6 +66,67 @@ const sendStartRequest = async () => {
   }
 };
 
+const sendStopRequest = async () => {
+  try {
+    const response = await fetch('http://localhost:8080/simulation/stop', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      console.log('Game stopped:', data.message);
+    } else {
+      console.error('Error:', data.message);
+    }
+  } catch (error) {
+    console.error('Request failed', error);
+  }
+};
+
+const sendResumeRequest = async () => {
+  try {
+    const response = await fetch('http://localhost:8080/simulation/resume', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      console.log('Game resumed:', data.message);
+    } else {
+      console.error('Error:', data.message);
+    }
+  } catch (error) {
+    console.error('Request failed', error);
+  }
+};
+
+const sendTerminateRequest = async () => {
+  try {
+    const response = await fetch('http://localhost:8080/simulation/terminate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      console.log('Game terminated:', data.message);
+    } else {
+      console.error('Error:', data.message);
+    }
+  } catch (error) {
+    console.error('Request failed', error);
+  }
+};
+
+
 const getChefs = (count: number | string) => chefs.slice(0, Number(count));
 const getCashRegisters = (count: number | string) => cashRegisters.slice(0, Number(count));
 
@@ -88,12 +149,14 @@ export const useStart = ({ isPlaying, terminate }: OnStartProps) => {
 
   useEffect(() => {
     if (isPlaying) {
-      onGameStart({
-        chefs: getChefs(countOfCooks),
-        cashRegisters: getCashRegisters(countOfCashRegisters),
-      });
-
-      sendStartRequest();
+      if (isPlaying) {
+        sendStartRequest();
+  
+        onGameStart({
+          chefs: getChefs(countOfCooks),
+          cashRegisters: getCashRegisters(countOfCashRegisters),
+        });
+      }
     }
 
     if (terminate) {
