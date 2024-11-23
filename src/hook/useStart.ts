@@ -1,8 +1,9 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as constants from '../constant';
 import { setMenuState } from '../redux/reduser/menu';
-import { selectAmountOfCashRegisters, selectAmountOfCooks } from '../redux/reduser/setting';
+import { selectAmountOfCashRegisters, selectAmountOfCooks, selectCookingStrategy } from '../redux/reduser/setting';
+import { sendStartRequest, sendStopRequest, setSimulationConfig, socket } from '../socket';
 import { ICashRegister } from '../types/cash-register';
 import { IChef } from '../types/chef';
 import { useManager } from './useManager';
@@ -10,20 +11,6 @@ import { useManager } from './useManager';
 type OnStartProps = {
   isPlaying: boolean;
   terminate: boolean;
-};
-
-const socket = new WebSocket('ws://localhost:8080/websocket');
-
-socket.onopen = () => {
-  console.log('Connected to the server');
-};
-
-socket.onerror = (error) => {
-  console.error('Connection error:', error);
-};
-
-socket.onclose = () => {
-  console.log('Disconnected from server');
 };
 
 const cashRegisters: ICashRegister[] = constants.cashRegister.positions.map(
@@ -46,95 +33,17 @@ const chefs = constants.chefs.positions.map(
     }) as IChef,
 );
 
-const sendStartRequest = async () => {
-  try {
-    const response = await fetch('http://localhost:8080/simulation/start', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    const data = await response.json();
-    if (response.ok) {
-      console.log('Success:', data.message);
-    } else {
-      console.error('Error:', data.message);
-    }
-  } catch (error) {
-    console.error('Request failed', error);
-  }
-};
-
-const sendStopRequest = async () => {
-  try {
-    const response = await fetch('http://localhost:8080/simulation/stop', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    const data = await response.json();
-    if (response.ok) {
-      console.log('Game stopped:', data.message);
-    } else {
-      console.error('Error:', data.message);
-    }
-  } catch (error) {
-    console.error('Request failed', error);
-  }
-};
-
-const sendResumeRequest = async () => {
-  try {
-    const response = await fetch('http://localhost:8080/simulation/resume', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    const data = await response.json();
-    if (response.ok) {
-      console.log('Game resumed:', data.message);
-    } else {
-      console.error('Error:', data.message);
-    }
-  } catch (error) {
-    console.error('Request failed', error);
-  }
-};
-
-const sendTerminateRequest = async () => {
-  try {
-    const response = await fetch('http://localhost:8080/simulation/terminate', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    const data = await response.json();
-    if (response.ok) {
-      console.log('Game terminated:', data.message);
-    } else {
-      console.error('Error:', data.message);
-    }
-  } catch (error) {
-    console.error('Request failed', error);
-  }
-};
-
-
 const getChefs = (count: number | string) => chefs.slice(0, Number(count));
 const getCashRegisters = (count: number | string) => cashRegisters.slice(0, Number(count));
 
 export const useStart = ({ isPlaying, terminate }: OnStartProps) => {
+  const [isStarted, setIsStarted] = useState(false);
+
   const dispatch = useDispatch();
-  const [countOfCashRegisters, countOfCooks] = [
+  const [countOfCashRegisters, countOfCooks, cookingStrategy] = [
     useSelector(selectAmountOfCashRegisters),
     useSelector(selectAmountOfCooks),
+    useSelector(selectCookingStrategy),
   ];
   const {
     onGameStart,
@@ -149,20 +58,29 @@ export const useStart = ({ isPlaying, terminate }: OnStartProps) => {
 
   useEffect(() => {
     if (isPlaying) {
-      if (isPlaying) {
+      if (!isStarted) {
         sendStartRequest();
-  
+        setSimulationConfig({
+          cooksNumber: Number(countOfCooks),
+          cashRegistersNumber: Number(countOfCashRegisters),
+          specializedCooksMode: cookingStrategy === 'm:m',
+        });
         onGameStart({
           chefs: getChefs(countOfCooks),
           cashRegisters: getCashRegisters(countOfCashRegisters),
         });
+        setIsStarted(true);
+      } else {
+        sendStopRequest();
       }
+    } else {
+      sendStartRequest();
     }
 
     if (terminate) {
       dispatch(setMenuState('preview'));
     }
-  }, [isPlaying, terminate, dispatch, countOfCooks, countOfCashRegisters, onGameStart]);
+  }, [isPlaying, terminate, dispatch, countOfCooks, countOfCashRegisters, onGameStart, isStarted, cookingStrategy]);
 
   useEffect(() => {
     socket.onmessage = (event) => {

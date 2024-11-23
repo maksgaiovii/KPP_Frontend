@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 import { useEffect, useState } from 'react';
 import { OrbitControls } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
@@ -62,10 +64,7 @@ export function Game() {
         position: 'relative',
       }}
     >
-      <Canvas
-        camera={{ position: [15, 15, 15], fov: 75 }}
-        style={{ backgroundColor: 'black' }}
-      >
+      <Canvas camera={{ position: [15, 15, 15], fov: 75 }} style={{ backgroundColor: 'black' }}>
         <OrbitControls minPolarAngle={0} maxPolarAngle={Math.PI / 2} />
         <ambientLight intensity={0.2} />
         <pointLight position={[15, 10, 15]} intensity={500} color="#FE0071" />
@@ -78,18 +77,12 @@ export function Game() {
 
       {/* Кнопки поверх Canvas */}
       <div className="game-control-container">
-        <div className="game-control play">
+        <div className="game-control play" onClick={() => handleButtonClick('Play')}>
           Play
         </div>
-        <div className="game-control terminate">
-          Terminate
-        </div>
-        <div className="game-control pause">
-          Pause
-        </div>
-        <div className="game-control continue">
-          Continue
-        </div>
+        <div className="game-control terminate">Terminate</div>
+        <div className="game-control pause">Pause</div>
+        <div className="game-control continue">Continue</div>
       </div>
     </div>
   );

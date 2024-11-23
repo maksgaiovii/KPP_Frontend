@@ -1,11 +1,7 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { cashRegister, chefs } from '../constant';
-import {
-  addCashRegister,
-  getCashRegisters,
-  removeCashRegisterById,
-} from '../redux/reduser/game/cash-register';
+import { addCashRegister, getCashRegisters, removeCashRegisterById } from '../redux/reduser/game/cash-register';
 import { addChef, getChefs, removeChefById, updateChef } from '../redux/reduser/game/chefs';
 import { addCustomer, getCustomers, updateCustomer } from '../redux/reduser/game/customers';
 import { ICashRegister } from '../types/cash-register';
