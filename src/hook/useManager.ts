@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { cashRegister, chefs } from '../constant';
@@ -34,10 +32,12 @@ export const useManager = () => {
     },
     [dispatch],
   );
-  const onCustomerCreated = useCallback((_event: events.CustomerCreated) => {}, []);
+  const onCustomerCreated = useCallback((event: events.CustomerCreated) => {
+    console.log('Customer created event', event);
+  }, []);
   const onCustomerInQueue = useCallback(
     (event: events.CustomerInQueue) => {
-      const cash = lobbyCashRegisters.find((cash) => cash.id === event.cashRegister.id);
+      const cash = lobbyCashRegisters.find((cash) => String(cash.id) == event.cashRegisterId);
       if (cash) {
         const freePosition = cash.available.find(
           (pos) => !customers.some(({ position }) => getDistance(position as any, pos) < 0.5),
@@ -46,14 +46,13 @@ export const useManager = () => {
         if (freePosition) {
           dispatch(
             addCustomer({
-              ...event.customer,
+              id: event.customerId as unknown as number,
+              order: null,
+              status: 'in-queue',
               position: cash.available[cash.available.length - 1],
               cashRegisterId: cash.id as any,
             }),
           );
-          setTimeout(() => {
-            dispatch(updateCustomer({ ...event.customer, goTo: [freePosition] } as any));
-          }, 1000);
         } else {
           setTimeout(() => {
             onCustomerInQueue(event);
@@ -65,11 +64,34 @@ export const useManager = () => {
     },
     [customers, dispatch, lobbyCashRegisters],
   );
-  const onOrderAccepted = useCallback((_event: events.OrderAccepted) => {}, []);
+  const onOrderAccepted = useCallback(
+    (_event: events.OrderAccepted) => {
+      const customer = customers.find((customer) => String(customer.id) === _event.customerId);
+      const cash = lobbyCashRegisters.find((cash) => String(cash.id) == _event.cashRegisterId);
+      if (customer && cash) {
+        dispatch(
+          updateCustomer({
+            ...customer,
+            order: {
+              id: _event.orderId,
+              createdAt: new Date(_event.acceptedAt),
+              orderItems: _event.orderItems.map((item) => ({ menuItem: { name: item, ingridients: [] } })),
+              uncompletedOrderItems: [],
+              cashRegister: cash,
+            },
+            status: 'in-queue',
+          }),
+        );
+      } else {
+        console.error('Customer not found', _event);
+      }
+    },
+    [customers, dispatch, lobbyCashRegisters],
+  );
   const onOrderCompleted = useCallback(
     (event: events.OrderCompleted) => {
-      const cash = lobbyCashRegisters.find((cash) => cash.id === event.order.cashRegister!.id!);
-      const customer = customers.find((customer) => customer.order.id === event.order.id);
+      const cash = lobbyCashRegisters.find((cash) => String(cash.id) === event.cashRegisterId);
+      const customer = customers.find((customer) => String(customer.id) === event.customerId);
       dispatch(updateCustomer({ ...customer, goTo: cash?.outPositions } as any));
 
       cash!.available.forEach((pos, idx, arr) => {
@@ -85,11 +107,13 @@ export const useManager = () => {
     },
     [customers, dispatch, lobbyCashRegisters],
   );
-  const onChefChangeStatus = useCallback((_event: events.ChefChangeStatus) => {}, []);
+  const onChefChangeStatus = useCallback((_event: any) => {
+    console.log('Chef change status event', _event);
+  }, []);
   const onDishPreparationStarted = useCallback(
     (event: events.DishPreparationStarted) => {
-      const { cook, nextDishState } = event;
-      const chef = cooks.find((ch) => ch.id === cook.id);
+      const { cookId, nextDishState } = event;
+      const chef = cooks.find((ch) => String(ch.id) === cookId);
       if (chef) {
         const newPosition = ['baking'].includes(nextDishState)
           ? chefs.ovenPositions[chef.index]
@@ -102,7 +126,9 @@ export const useManager = () => {
     },
     [cooks, dispatch],
   );
-  const onDishPreparationCompleted = useCallback((_event: events.DishPreparationCompleted) => {}, []);
+  const onDishPreparationCompleted = useCallback((_event: events.DishPreparationCompleted) => {
+    console.log('Dish preparation completed event', _event);
+  }, []);
 
   return {
     onGameStart,

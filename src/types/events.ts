@@ -1,52 +1,49 @@
-import { ICashRegister } from './cash-register';
-import { IChef } from './chef';
-import { ICustomer } from './customer';
-import { IOrder } from './order';
 import { IPizza } from './pizza';
 
-export interface IEvent {
-  name?: string;
-  type:
-    | 'customerCreated'
-    | 'customerInQueue'
-    | 'orderAccepted'
-    | 'orderCompleted'
-    | 'chefChangeStatus'
-    | 'dishPreparationStarted'
-    | 'dishPreparationCompleted';
+export interface CustomerCreated {
+  customerId: string;
+  customerName: string;
+  createdAt: string;
 }
 
-export interface CustomerCreated extends IEvent {
-  customer: ICustomer;
-}
-
-export interface CustomerInQueue extends IEvent {
-  customer: ICustomer;
-  cashRegister: ICashRegister;
-}
-
-export interface OrderAccepted extends IEvent {
-  customer: ICustomer;
-  order: IOrder;
-}
-
-export interface OrderCompleted extends IEvent {
-  order: IOrder;
-}
-
-export interface ChefChangeStatus extends IEvent {
-  status: IChef['status'];
-  cookId: string | number;
-}
-
-export interface DishPreparationStarted extends IEvent {
-  dish?: IPizza;
-  cook: IChef;
+export interface DishPreparationStarted {
+  dishID: string;
+  dishName: string;
   nextDishState: IPizza['state'];
+  cookId: string;
 }
 
-export interface DishPreparationCompleted extends IEvent {
-  dish: IPizza;
-  cook: IChef;
+export interface DishPreparationCompleted {
+  dishID: string;
+  dishName: string;
   newDishState: IPizza['state'];
+  cookId: string;
 }
+
+export interface CustomerInQueue {
+  customerId: string;
+  cashRegisterId: string;
+}
+
+export interface OrderAccepted {
+  orderId: string;
+  orderItems: string[];
+  customerId: string;
+  cashRegisterId: string;
+  acceptedAt: string;
+}
+
+export interface OrderCompleted {
+  orderId: string;
+  customerId: string;
+  cashRegisterId: string;
+  completedAt: string;
+}
+
+export type IEvent =
+  | CustomerCreated
+  | DishPreparationStarted
+  | DishPreparationCompleted
+  | CustomerInQueue
+  | OrderAccepted
+  | OrderCompleted;

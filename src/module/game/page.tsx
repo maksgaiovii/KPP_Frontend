@@ -39,14 +39,12 @@ export function Game() {
       document.body.style.background = 'url(img/game_bg.png)';
       document.body.style.backgroundSize = 'cover';
       document.body.style.height = '100vh';
-      console.log('Background changed successfully');
     } catch (error) {
       console.error('Failed to change background', error);
     }
 
     return () => {
       document.body.style.background = '';
-      console.log('Background reset successfully');
     };
   }, []);
 
