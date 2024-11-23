@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as constants from '../constant';
 import { setMenuState } from '../redux/reduser/menu';
 import { selectAmountOfCashRegisters, selectAmountOfCooks } from '../redux/reduser/setting';
-import { registerSocketHandlers, unregisterSocketHandlers } from '../socket';
 import { ICashRegister } from '../types/cash-register';
 import { IChef } from '../types/chef';
 import { IEvent } from '../types/events';
@@ -12,6 +11,20 @@ import { useManager } from './useManager';
 type OnStartProps = {
   isPlaying: boolean;
   terminate: boolean;
+};
+
+const socket = new WebSocket('ws://localhost:8080/websocket');
+
+socket.onopen = () => {
+  console.log('Connected to the server');
+};
+
+socket.onerror = (error) => {
+  console.error('Connection error:', error);
+};
+
+socket.onclose = () => {
+  console.log('Disconnected from server');
 };
 
 const cashRegisters: ICashRegister[] = constants.cashRegister.positions.map(
@@ -43,7 +56,6 @@ export const useStart = ({ isPlaying, terminate }: OnStartProps) => {
     useSelector(selectAmountOfCashRegisters),
     useSelector(selectAmountOfCooks),
   ];
-  const [events, setEvents] = useState<IEvent[]>([]);
   const {
     onGameStart,
     onCustomerCreated,
@@ -56,7 +68,6 @@ export const useStart = ({ isPlaying, terminate }: OnStartProps) => {
   } = useManager();
 
   useEffect(() => {
-    // Ініціалізація гри
     if (isPlaying) {
       onGameStart({
         chefs: getChefs(countOfCooks),
@@ -64,29 +75,44 @@ export const useStart = ({ isPlaying, terminate }: OnStartProps) => {
       });
     }
 
-    // Закриття гри
     if (terminate) {
       dispatch(setMenuState('preview'));
     }
   }, [isPlaying, terminate, dispatch, countOfCooks, countOfCashRegisters, onGameStart]);
 
   useEffect(() => {
-    // Реєстрація сокетів
-    const handlers = {
-      customerCreated: onCustomerCreated,
-      customerInQueue: onCustomerInQueue,
-      orderAccepted: onOrderAccepted,
-      orderCompleted: onOrderCompleted,
-      chefChangeStatus: onChefChangeStatus,
-      dishPreparationStarted: onDishPreparationStarted,
-      dishPreparationCompleted: onDishPreparationCompleted,
+    socket.onmessage = (event) => {
+      const message = JSON.parse(event.data);
+      switch (message.type) {
+        case 'customer:created':
+          onCustomerCreated(message.data);
+          break;
+        case 'customer:inQueue':
+          onCustomerInQueue(message.data);
+          break;
+        case 'order:accepted':
+          onOrderAccepted(message.data);
+          break;
+        case 'order:completed':
+          onOrderCompleted(message.data);
+          break;
+        case 'chef:changeStatus':
+          onChefChangeStatus(message.data);
+          break;
+        case 'dish:preparationStarted':
+          onDishPreparationStarted(message.data);
+          break;
+        case 'dish:preparationCompleted':
+          onDishPreparationCompleted(message.data);
+          break;
+        default:
+          console.warn('Невідома подія:', message.type);
+          break;
+      }
     };
 
-    registerSocketHandlers(handlers);
-
     return () => {
-      // Видалення обробників при анмаунті
-      unregisterSocketHandlers(Object.keys(handlers) as (keyof typeof handlers)[]);
+      // socket.close();
     };
   }, [
     onCustomerCreated,
@@ -97,6 +123,4 @@ export const useStart = ({ isPlaying, terminate }: OnStartProps) => {
     onDishPreparationStarted,
     onDishPreparationCompleted,
   ]);
-
-  return { events, setEvents };
 };
