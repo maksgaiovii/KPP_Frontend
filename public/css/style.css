@@ -1,0 +1,409 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Fonts */
+
+@font-face {
+  font-family: 'PizzaSimulatorMainFont';
+  src: url('../fonts/Roboto/Roboto-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'PizzaSimulatorHeadingsFont';
+  src: url('../fonts/Pacifico/Pacifico-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+:root {
+  --main-red-color: #8b3a3a;
+  --secondary-red-color: #d4634b;
+
+  --main-yellow-color: #f4d29c;
+  --white-text-color: #fdfdfd;
+  --base-text-color: #4a2c2a;
+}
+
+/***
+
+    *
+        Welcome page 
+    *
+
+***/
+
+body {
+  font-family: 'PizzaSimulatorMainFont';
+  transition: 0.4s;
+}
+
+.unvisible {
+  display: none !important;
+}
+
+.shady {
+  box-shadow: 5px 5px 4px 0 rgba(60, 60, 60, 0.5);
+}
+
+/***
+
+    *
+        Special components 
+    *
+
+***/
+
+.button {
+  height: 40px;
+  width: 150px;
+  border-radius: 100px;
+
+  font-family: 'PizzaSimulatorHeadingsFont';
+  font-size: 14pt;
+
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+
+.button:hover {
+  background: white;
+  color: var(--main-red-color);
+  border: 3px solid var(--main-red-color);
+  transform: translatey(-3px);
+}
+
+.button::before,
+.button::after {
+  content: '';
+  display: block;
+  height: 2px;
+  border-radius: 10px;
+  position: absolute;
+  top: 0;
+  transition-duration: 0.4s;
+}
+
+.button:hover::before,
+.button:hover::after {
+  background-color: var(--main-red-color);
+}
+
+.button::before {
+  width: 80%;
+  left: 10%;
+}
+
+.button:hover::before {
+  top: 40px;
+}
+
+.button::after {
+  width: 60%;
+  left: 21%;
+  transition-duration: 0.8s;
+}
+
+.button:hover::after {
+  top: 47px;
+}
+
+.priority-button {
+  background: var(--main-red-color);
+  color: var(--white-text-color);
+  border: 3px solid transparent;
+}
+
+.simple-button {
+  border: 3px solid var(--main-red-color);
+
+  background: transparent;
+  color: var(--main-red-color);
+}
+
+.welcome-body {
+  /* background-image: url('../img/welcome_page_bg.png'); */
+  background-attachment: fixed;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.settings-body {
+  background: var(--main-yellow-color);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'PizzaSimulatorHeadingsFont';
+  color: var(--main-red-color);
+}
+
+p,
+span {
+  color: var(--base-text-color);
+}
+
+.welcome-container {
+  height: 100%;
+  width: 100%;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.welcome-container,
+.settings-container {
+  transition-duration: 0.4s;
+}
+
+.settings-container {
+  transform: scale(0.8) translateY(-50px);
+  opacity: 0;
+}
+
+/* Welcome column */
+
+.welcome {
+  height: 100vh;
+  padding: 0 100px;
+
+  display: grid;
+  align-content: center;
+}
+
+.mobile-pizza-icon {
+  display: none;
+  width: 50%;
+  margin-bottom: 50px;
+
+  opacity: 0.5;
+}
+
+.welcome_heading {
+  font-size: 40pt;
+}
+
+.title_divider {
+  height: 3px;
+  width: 80px;
+  margin: 10px 0;
+
+  background: var(--main-red-color);
+}
+
+.welcome_description {
+  font-size: 14pt;
+  margin: 30px 0;
+}
+
+.buttons-panel {
+  display: grid;
+  grid-auto-flow: column;
+  justify-content: start;
+  align-items: center;
+  grid-gap: 20px;
+}
+
+.button_divider {
+  height: 35px;
+  width: 3px;
+
+  background: var(--main-red-color);
+
+  transform: rotate(30deg);
+}
+
+.pizza-animation {
+  position: relative;
+}
+
+/* Pizza animation column */
+.pizza-animation_block {
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  width: 90%;
+  height: 80vh;
+
+  background: var(--secondary-red-color);
+  border-left: 5px solid var(--main-red-color);
+  border-bottom: 5px solid var(--main-red-color);
+  border-radius: 0 0 0 100%;
+
+  display: grid;
+  place-content: center;
+}
+
+.pizza-animation_gif-image {
+  position: absolute;
+  top: 50px;
+  right: 50px;
+
+  width: 60%;
+}
+
+/***
+
+    *
+        Settings page 
+    *
+    
+***/
+
+.settings-container {
+  height: 100vh;
+
+  display: grid;
+  grid-template-columns: 250px 1fr 250px;
+}
+
+.settings-container > div:first-child,
+.settings-container > div:last-child {
+  display: grid;
+  justify-content: center;
+}
+
+.settings-container > div:first-child {
+  align-content: space-around;
+}
+
+.settings-container > div:last-child {
+  align-content: center;
+}
+
+.settings {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+
+  padding: 50px 0 0 0;
+}
+
+.settings_title {
+  width: 40vw;
+  height: 50px;
+
+  border: 3px solid var(--main-red-color);
+
+  background-image: url('../img/settings-title-background.png');
+  background-attachment: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+
+  display: grid;
+  place-content: center;
+}
+
+.settings_decoration {
+  display: grid;
+  grid-auto-flow: column;
+  justify-content: space-between;
+
+  width: 35vw;
+  height: 50px;
+}
+
+.settings-rope {
+  height: 100%;
+  width: 5px;
+  background: #8b3a3a;
+}
+
+.main-settings-menu_block {
+  width: 90%;
+  padding: 70px 70px 30px 70px;
+
+  border: 3px solid var(--main-red-color);
+
+  background-image: url('../img/settings-main-menu-background.jpg');
+  background-attachment: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+
+  display: grid;
+  justify-items: center;
+  align-content: start;
+}
+
+.menu_block_item {
+  height: 50px;
+  width: 100%;
+  margin-bottom: 30px;
+
+  display: grid;
+  grid-auto-flow: column;
+  justify-content: space-between;
+}
+
+.menu_block_item_select {
+  width: 100px;
+  height: 40px;
+  border-radius: 10px;
+
+  background: transparent;
+  border: 3px solid var(--main-red-color);
+  color: var(--main-red-color);
+
+  font-family: 'PizzaSimulatorHeadingsFont';
+  font-size: 16pt;
+  font-weight: bold;
+
+  text-align: center;
+  vertical-align: center;
+
+  cursor: pointer;
+}
+
+.menu_block_item_select > option {
+  background: var(--main-red-color);
+  color: var(--white-text-color);
+}
+
+.menu_block_items_divider {
+  height: 4px;
+  width: 100%;
+  margin: 40px 0 30px 0;
+
+  background: var(--main-red-color);
+}
+
+.settings-buttons-panel {
+  display: grid;
+  grid-auto-flow: column;
+  grid-gap: 20px;
+}
+
+.mobile-settings-buttons-panel {
+  display: none;
+  grid-auto-flow: row;
+  justify-items: center;
+  grid-gap: 20px;
+  width: 90%;
+  margin-top: 20px;
+}
+
+.pizza-bg-image {
+  width: 150px;
+  opacity: 0.4;
+}
+
+/* Temp */
+/* .container {
+    border: 1px solid blue;
+}
+
+.welcome, .container {
+    border: 1px solid purple;
+} */
