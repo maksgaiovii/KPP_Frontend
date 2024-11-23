@@ -78,29 +78,17 @@ export function Game() {
 
       {/* Кнопки поверх Canvas */}
       <div className="game-control-container">
-        <div
-          onClick={() => handleButtonClick('Play/Pause')}
-          className="game-control play-pause"
-        >
-          Play/Pause
+        <div className="game-control play">
+          Play
         </div>
-        <div
-          onClick={() => handleButtonClick('Terminate')}
-          className="game-control terminate"
-        >
+        <div className="game-control terminate">
           Terminate
         </div>
-        <div
-          onClick={() => handleButtonClick('Restart')}
-          className="game-control restart"
-        >
-          Restart
+        <div className="game-control pause">
+          Pause
         </div>
-        <div
-          onClick={() => handleButtonClick('Settings')}
-          className="game-control settings"
-        >
-          Settings
+        <div className="game-control continue">
+          Continue
         </div>
       </div>
     </div>

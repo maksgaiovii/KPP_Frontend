@@ -3,6 +3,8 @@
     padding: 10px 20px;
     margin: 10px;
     height: 40px;
+    width: 120px;
+    text-align: center;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -55,7 +57,7 @@
   opacity: 1;
 }
   
-.game-control.play-pause {
+.game-control.play {
 background-color: #4CAF50; 
 }
 
@@ -63,11 +65,11 @@ background-color: #4CAF50;
 background-color: #F44336; 
 }
 
-.game-control.restart {
+.game-control.pause {
 background-color: #FF9800;
 }
 
-.game-control.settings {
+.game-control.continue {
 background-color: #2196F3;
 }
 
