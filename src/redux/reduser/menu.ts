@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface MenuState {
-  state: 'prewiev' | 'playing' | 'finished';
+  state: 'preview' | 'playing' | 'finished';
 }
 
 export const initialMenuState: MenuState = {
-  state: 'prewiev',
+  state: 'preview',
 };
 
 const menuSlice = createSlice({
