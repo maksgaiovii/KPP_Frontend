@@ -4,6 +4,7 @@ import { useMoveAlongPoints } from '../../hook/useMoveAlongPoints';
 import { updateCustomer } from '../../redux/reduser/game/customers';
 import { ICustomer } from '../../types/customer';
 import { getDistance } from '../../util';
+import CustomerModel3D from './ClientModel3D';
 
 export const Customer = ({ position, goTo, ...rest }: ICustomer) => {
   const [positions, setPositions] = useState<[number, number, number][]>([]);
@@ -36,8 +37,16 @@ export const Customer = ({ position, goTo, ...rest }: ICustomer) => {
   return (
     <>
       <mesh ref={objectRef}>
-        <sphereGeometry args={[0.32]} />
-        <meshMatcapMaterial color={'#0b132b'} />
+        <CustomerModel3D
+          bodyColor="lightgrey"
+          headColor="peachpuff"
+          limbColor="lightgrey"
+          hatColor="darkblue"
+          shirtColor="skyblue"
+          pantsColor="darkgrey"
+          shoesColor="black"
+          accessoryColor="red" // Optional for a tie
+        />
       </mesh>
     </>
   );
