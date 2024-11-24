@@ -7,36 +7,14 @@ import { useStart } from '../../hook/useStart';
 import { Kitchen } from '../components/kitchen';
 import { Lobby } from '../components/lobby';
 import '../../../public/css/gameControls.css';
+import { Client } from '@stomp/stompjs';
 import { sendResumeRequest, sendStartRequest, sendStopRequest, sendTerminateRequest } from '../../socket/index';
 
 export function Game() {
   const [isPlaying, setIsPlaying] = useState(true);
   const [terminate, setTerminate] = useState(false);
 
-  useStart({ isPlaying, terminate });
-
-  useEffect(() => {
-    const onSpacePress = (event: KeyboardEvent) => {
-      if (event.code === 'Space') {
-        console.log('Space pressed');
-        setIsPlaying((prev) => !prev);
-      }
-    };
-
-    const onEscapePress = (event: KeyboardEvent) => {
-      if (event.code === 'Escape') {
-        setTerminate(true);
-      }
-    };
-
-    window.addEventListener('keydown', onSpacePress);
-    window.addEventListener('keydown', onEscapePress);
-
-    return () => {
-      window.removeEventListener('keydown', onSpacePress);
-      window.removeEventListener('keydown', onEscapePress);
-    };
-  }, []);
+  const { eventHandlers } = useStart({ isPlaying, terminate });
 
   useEffect(() => {
     try {
@@ -83,6 +61,41 @@ export function Game() {
       console.error(`Failed to execute action "${action}"`, err);
     }
   };
+
+  useEffect(() => {
+    console.log('Connecting to the broker RERENDER');
+    const client = new Client({
+      brokerURL: 'ws://localhost:8080/websocket',
+      onConnect: () => {
+        Object.keys(eventHandlers).forEach((key: any) => {
+          client.subscribe(`/topic/${key}`, (message) => {
+            const event = JSON.parse(message.body);
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
+            eventHandlers[key](event);
+          });
+        });
+      },
+      onStompError: (frame) => {
+        console.log('Broker reported error: ' + frame.headers['message']);
+        console.log('Additional details: ' + frame.body);
+      },
+      onWebSocketClose: (evt) => {
+        console.log('Socket closed!', evt);
+      },
+      onDisconnect: () => {
+        console.log('Disconnected');
+      },
+    });
+
+    client.activate();
+
+    return () => {
+      client.deactivate();
+    };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div

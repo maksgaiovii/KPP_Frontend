@@ -1,17 +1,3 @@
-export const socket = new WebSocket('ws://localhost:8080/websocket');
-
-socket.onopen = () => {
-  console.log('Connected to the server');
-};
-
-socket.onerror = (error) => {
-  console.error('Connection error:', error);
-};
-
-socket.onclose = () => {
-  console.log('Disconnected from server');
-};
-
 function Fetch(url: string | URL | globalThis.Request, options?: RequestInit) {
   return new Promise((resolve, reject) => {
     fetch(url, {

@@ -1,35 +1,19 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+// import { WebSocket } from 'ws';
 import * as constants from '../constant';
 import { setMenuState } from '../redux/reduser/menu';
 import { selectAmountOfCashRegisters, selectAmountOfCooks, selectCookingStrategy } from '../redux/reduser/setting';
-import { setSimulationConfig, socket } from '../socket';
+import { setSimulationConfig } from '../socket';
 import { ICashRegister } from '../types/cash-register';
 import { IChef } from '../types/chef';
-import {
-  CustomerCreated,
-  CustomerInQueue,
-  DishPreparationCompleted,
-  DishPreparationStarted,
-  IEvent,
-  OrderAccepted,
-  OrderCompleted,
-} from '../types/events';
 import { useManager } from './useManager';
+
+// global && Object.assign(global, { WebSocket });
 
 type OnStartProps = {
   isPlaying: boolean;
   terminate: boolean;
-};
-
-type EventHandlers = {
-  'customer:created': (_event: CustomerCreated) => void;
-  'customer:inQueue': (_event: CustomerInQueue) => void;
-  'order:accepted': (_event: OrderAccepted) => void;
-  'order:completed': (_event: OrderCompleted) => void;
-  'chef:changeStatus': (_event: any) => void;
-  'dish:preparationStarted': (_event: DishPreparationStarted) => void;
-  'dish:preparationCompleted': (_event: DishPreparationCompleted) => void;
 };
 
 const cashRegisters: ICashRegister[] = constants.cashRegister.positions.map(
@@ -66,11 +50,9 @@ export const useStart = ({ isPlaying, terminate }: OnStartProps) => {
   ];
   const {
     onGameStart,
-    onCustomerCreated,
     onCustomerInQueue,
     onOrderAccepted,
     onOrderCompleted,
-    onChefChangeStatus,
     onDishPreparationStarted,
     onDishPreparationCompleted,
   } = useManager();
@@ -96,51 +78,16 @@ export const useStart = ({ isPlaying, terminate }: OnStartProps) => {
     }
   }, [isPlaying, terminate, dispatch, countOfCooks, countOfCashRegisters, onGameStart, isStarted, cookingStrategy]);
 
-  const eventHandlers: EventHandlers = useMemo(
+  const eventHandlers = useMemo(
     () => ({
-      'customer:created': onCustomerCreated,
-      'customer:inQueue': onCustomerInQueue,
-      'order:accepted': onOrderAccepted,
-      'order:completed': onOrderCompleted,
-      'chef:changeStatus': onChefChangeStatus,
-      'dish:preparationStarted': onDishPreparationStarted,
-      'dish:preparationCompleted': onDishPreparationCompleted,
+      'new-customer-in-queue': onCustomerInQueue,
+      'order-accepted': onOrderAccepted,
+      'order-completed': onOrderCompleted,
+      'dish-preparation-started': onDishPreparationStarted,
+      'dish-preparation-completed': onDishPreparationCompleted,
     }),
-    [
-      onCustomerCreated,
-      onCustomerInQueue,
-      onOrderAccepted,
-      onOrderCompleted,
-      onChefChangeStatus,
-      onDishPreparationStarted,
-      onDishPreparationCompleted,
-    ],
+    [onCustomerInQueue, onOrderAccepted, onOrderCompleted, onDishPreparationStarted, onDishPreparationCompleted],
   );
 
-  useEffect(() => {
-    socket.onmessage = (event) => {
-      const message: IEvent = JSON.parse(event.data);
-
-      const handler = eventHandlers[message.type as keyof EventHandlers];
-
-      if (handler) {
-        handler(message);
-      } else {
-        console.warn('Невідома подія:', message.type);
-      }
-    };
-
-    return () => {
-      // socket.close();
-    };
-  }, [
-    onCustomerCreated,
-    onCustomerInQueue,
-    onOrderAccepted,
-    onOrderCompleted,
-    onChefChangeStatus,
-    onDishPreparationStarted,
-    onDishPreparationCompleted,
-    eventHandlers,
-  ]);
+  return { eventHandlers };
 };

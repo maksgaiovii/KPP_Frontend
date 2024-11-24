@@ -50,6 +50,7 @@ export const useManager = () => {
         );
 
         if (freePosition) {
+          console.log('Customer in queue', event, freePosition, cash);
           dispatch(
             addCustomer({
               id: event.customerId as unknown as number,
@@ -75,6 +76,7 @@ export const useManager = () => {
       const customer = customers.find((customer) => String(customer.id) === _event.customerId);
       const cash = lobbyCashRegisters.find((cash) => String(cash.id) == _event.cashRegisterId);
       if (customer && cash) {
+        console.log('Order accepted event', _event, customer, cash);
         dispatch(
           updateCustomer({
             ...customer,
@@ -99,6 +101,7 @@ export const useManager = () => {
       const cash = lobbyCashRegisters.find((cash) => String(cash.id) === event.cashRegisterId);
       const customer = customers.find((customer) => String(customer.id) === event.customerId);
       dispatch(updateCustomer({ ...customer, goTo: cash?.outPositions } as any));
+      console.log('Order completed event', event, cash, customer);
 
       cash!.available.forEach((pos, idx, arr) => {
         if (idx + 1 < arr.length) {
@@ -113,9 +116,6 @@ export const useManager = () => {
     },
     [customers, dispatch, lobbyCashRegisters],
   );
-  const onChefChangeStatus = useCallback((_event: any) => {
-    console.log('Chef change status event', _event);
-  }, []);
   const onDishPreparationStarted = useCallback(
     (event: events.DishPreparationStarted) => {
       const { cookId, nextDishState } = event;
@@ -133,6 +133,7 @@ export const useManager = () => {
             ? chefs.final[chef.index]
             : chefs.positions[chef.index];
 
+        console.log('Dish preparation started event', event, chef, newPosition);
         dispatch(updateChef({ ...chef, goTo: [newPosition] }));
       }
     },
@@ -148,7 +149,6 @@ export const useManager = () => {
     onCustomerInQueue,
     onOrderAccepted,
     onOrderCompleted,
-    onChefChangeStatus,
     onDishPreparationStarted,
     onDishPreparationCompleted,
   };
