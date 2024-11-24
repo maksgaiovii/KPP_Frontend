@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { Mesh } from 'three';
 
-interface HumanModelProps {
+interface ChefModel3DProps {
   bodyColor: string;
   headColor: string;
   limbColor: string;
@@ -11,7 +11,7 @@ interface HumanModelProps {
   shoesColor: string; // New color for the shoes
 }
 
-const HumanModel: React.FC<HumanModelProps> = ({
+const ChefModel3D: React.FC<ChefModel3DProps> = ({
   bodyColor,
   headColor,
   limbColor,
@@ -89,4 +89,4 @@ const HumanModel: React.FC<HumanModelProps> = ({
   );
 };
 
-export default HumanModel;
+export default ChefModel3D;

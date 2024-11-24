@@ -4,12 +4,11 @@ import { useMoveAlongPoints } from '../../hook/useMoveAlongPoints';
 import { updateChef } from '../../redux/reduser/game/chefs';
 import { IChef } from '../../types/chef';
 import { getDistance } from '../../util';
-import HumanModel from './humanModel';
+import ChefModel3D from './humanModel';
 
 export const Chef = ({ position, goTo, ...rest }: Partial<IChef>) => {
   const [positions, setPositions] = useState<[number, number, number][]>([]);
   const dispatch = useDispatch();
-
 
   const { objectRef } = useMoveAlongPoints(positions, 0.1, (index, points) => {
     setTimeout(() => {
@@ -34,7 +33,7 @@ export const Chef = ({ position, goTo, ...rest }: Partial<IChef>) => {
 
   return (
     <mesh ref={objectRef}>
-      <HumanModel
+      <ChefModel3D
         bodyColor="peachpuff"
         headColor="peachpuff"
         limbColor="lightblue"
