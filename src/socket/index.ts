@@ -33,7 +33,6 @@ function Fetch(url: string | URL | globalThis.Request, options?: RequestInit) {
 }
 
 export const sendStartRequest = async () => Fetch('http://localhost:8080/simulation/start', { method: 'POST' });
-
 export const sendStopRequest = async () => Fetch('http://localhost:8080/simulation/stop', { method: 'POST' });
 export const sendResumeRequest = async () => Fetch('http://localhost:8080/simulation/resume', { method: 'POST' });
 
