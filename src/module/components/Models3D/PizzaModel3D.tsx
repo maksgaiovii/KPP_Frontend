@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { Mesh } from 'three';
-import { IPizza } from '../../types/pizza';
+import { IPizza } from '../../../types/pizza';
 
 interface Pizza3DProps {
   pizza: IPizza;

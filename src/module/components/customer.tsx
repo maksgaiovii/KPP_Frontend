@@ -4,7 +4,7 @@ import { useMoveAlongPoints } from '../../hook/useMoveAlongPoints';
 import { updateCustomer } from '../../redux/reduser/game/customers';
 import { ICustomer } from '../../types/customer';
 import { getDistance } from '../../util';
-import CustomerModel3D from './ClientModel3D';
+import CustomerModel3D from './Models3D/ClientModel3D';
 
 export const Customer = ({ position, goTo, ...rest }: ICustomer) => {
   const [positions, setPositions] = useState<[number, number, number][]>([]);
