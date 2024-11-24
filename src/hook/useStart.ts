@@ -3,14 +3,25 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as constants from '../constant';
 import { setMenuState } from '../redux/reduser/menu';
 import { selectAmountOfCashRegisters, selectAmountOfCooks, selectCookingStrategy } from '../redux/reduser/setting';
-import { sendStartRequest, sendStopRequest, setSimulationConfig, socket } from '../socket';
+import { setSimulationConfig, socket } from '../socket';
 import { ICashRegister } from '../types/cash-register';
 import { IChef } from '../types/chef';
 import { useManager } from './useManager';
+import { IEvent, CustomerCreated, DishPreparationStarted, DishPreparationCompleted, CustomerInQueue, OrderAccepted, OrderCompleted } from '../types/events';
 
 type OnStartProps = {
   isPlaying: boolean;
   terminate: boolean;
+};
+
+type EventHandlers = {
+  'customer:created': (event: CustomerCreated) => void;
+  'customer:inQueue': (event: CustomerInQueue) => void;
+  'order:accepted': (event: OrderAccepted) => void;
+  'order:completed': (event: OrderCompleted) => void;
+  'chef:changeStatus': (event: any) => void;
+  'dish:preparationStarted': (event: DishPreparationStarted) => void;
+  'dish:preparationCompleted': (event: DishPreparationCompleted) => void;
 };
 
 const cashRegisters: ICashRegister[] = constants.cashRegister.positions.map(
@@ -77,34 +88,27 @@ export const useStart = ({ isPlaying, terminate }: OnStartProps) => {
     }
   }, [isPlaying, terminate, dispatch, countOfCooks, countOfCashRegisters, onGameStart, isStarted, cookingStrategy]);
 
+  const eventHandlers: EventHandlers = {
+    'customer:created': onCustomerCreated,
+    'customer:inQueue': onCustomerInQueue,
+    'order:accepted': onOrderAccepted,
+    'order:completed': onOrderCompleted,
+    'chef:changeStatus': onChefChangeStatus,
+    'dish:preparationStarted': onDishPreparationStarted,
+    'dish:preparationCompleted': onDishPreparationCompleted,
+  };
+
   useEffect(() => {
     socket.onmessage = (event) => {
-      const message = JSON.parse(event.data);
-      switch (message.type) {
-        case 'customer:created':
-          onCustomerCreated(message.data);
-          break;
-        case 'customer:inQueue':
-          onCustomerInQueue(message.data);
-          break;
-        case 'order:accepted':
-          onOrderAccepted(message.data);
-          break;
-        case 'order:completed':
-          onOrderCompleted(message.data);
-          break;
-        case 'chef:changeStatus':
-          onChefChangeStatus(message.data);
-          break;
-        case 'dish:preparationStarted':
-          onDishPreparationStarted(message.data);
-          break;
-        case 'dish:preparationCompleted':
-          onDishPreparationCompleted(message.data);
-          break;
-        default:
-          console.warn('Невідома подія:', message.type);
-          break;
+      const message: IEvent = JSON.parse(event.data);
+
+      const handler = eventHandlers[message.type as keyof EventHandlers];
+
+      if (handler) {
+
+        handler(message);
+      } else {
+        console.warn('Невідома подія:', message.type);
       }
     };
 
