@@ -46,7 +46,7 @@ export const setSimulationConfig = async (config: {
   cashRegistersNumber: number;
   specializedCooksMode: boolean;
 }) =>
-  Fetch('http://localhost:8080/simulation/config', {
-    method: 'POST',
+  Fetch('http://localhost:8080/config', {
+    method: 'PUT',
     body: JSON.stringify(config),
   });

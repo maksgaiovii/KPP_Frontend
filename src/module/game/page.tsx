@@ -7,7 +7,7 @@ import { useStart } from '../../hook/useStart';
 import { Kitchen } from '../components/kitchen';
 import { Lobby } from '../components/lobby';
 import '../../../public/css/gameControls.css';
-import {sendStartRequest, sendStopRequest, sendResumeRequest, sendTerminateRequest} from "../../socket/index"
+import { sendResumeRequest, sendStartRequest, sendStopRequest, sendTerminateRequest } from '../../socket/index';
 
 export function Game() {
   const [isPlaying, setIsPlaying] = useState(true);
@@ -105,10 +105,18 @@ export function Game() {
 
       {/* Кнопки поверх Canvas */}
       <div className="game-control-container">
-        <div className="game-control play" onClick={() => handleButtonClick('play')}>Play</div>
-        <div className="game-control terminate" onClick={() => handleButtonClick('terminate')}>Terminate</div>
-        <div className="game-control pause" onClick={() => handleButtonClick('pause')}>Pause</div>
-        <div className="game-control continue" onClick={() => handleButtonClick('continue')}>Continue</div>
+        <div className="game-control play" onClick={() => handleButtonClick('play')}>
+          Play
+        </div>
+        <div className="game-control terminate" onClick={() => handleButtonClick('terminate')}>
+          Terminate
+        </div>
+        <div className="game-control pause" onClick={() => handleButtonClick('pause')}>
+          Pause
+        </div>
+        <div className="game-control continue" onClick={() => handleButtonClick('continue')}>
+          Continue
+        </div>
       </div>
     </div>
   );
