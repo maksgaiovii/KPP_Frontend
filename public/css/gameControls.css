@@ -1,0 +1,101 @@
+.game-control {
+  color: white;
+  padding: 10px 20px;
+  margin: 10px;
+  height: 40px;
+  width: 120px;
+  text-align: center;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: 0.4s;
+}
+
+.game-control:hover {
+  background: white !important;
+  color: var(--main-red-color);
+  transform: translatey(-3px);
+}
+
+.game-control::before,
+.game-control::after {
+  content: '';
+  display: block;
+  height: 2px;
+  border-radius: 10px;
+  position: absolute;
+  top: 0;
+  transition-duration: 0.4s;
+}
+
+.game-control::before,
+.game-control::after {
+  opacity: 0;
+  background-color: white;
+}
+
+.game-control::before {
+  width: 80%;
+  left: 10%;
+}
+
+.game-control:hover::before {
+  top: 45px;
+  opacity: 1;
+}
+
+.game-control::after {
+  width: 60%;
+  left: 21%;
+  transition-duration: 0.8s;
+}
+
+.game-control:hover::after {
+  top: 52px;
+  opacity: 1;
+}
+
+.game-control.play {
+  background-color: #4caf50;
+}
+
+.game-control.terminate {
+  background-color: #f44336;
+}
+
+.game-control.pause {
+  background-color: #ff9800;
+}
+
+.game-control.continue {
+  background-color: #2196f3;
+}
+
+.game-control-container {
+  position: absolute;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: space-around;
+  width: 80%;
+  height: 100px;
+  max-width: 300px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .game-control {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .game-control {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+}

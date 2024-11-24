@@ -1,12 +1,14 @@
 import { IPizza } from './pizza';
 
 export interface CustomerCreated {
+  type: 'customer:created';
   customerId: string;
   customerName: string;
   createdAt: string;
 }
 
 export interface DishPreparationStarted {
+  type: 'dish:preparationStarted';
   dishID: string;
   dishName: string;
   nextDishState: IPizza['state'];
@@ -14,6 +16,7 @@ export interface DishPreparationStarted {
 }
 
 export interface DishPreparationCompleted {
+  type: 'dish:preparationCompleted';
   dishID: string;
   dishName: string;
   newDishState: IPizza['state'];
@@ -21,11 +24,13 @@ export interface DishPreparationCompleted {
 }
 
 export interface CustomerInQueue {
+  type: 'customer:inQueue';
   customerId: string;
   cashRegisterId: string;
 }
 
 export interface OrderAccepted {
+  type: 'order:accepted';
   orderId: string;
   orderItems: string[];
   customerId: string;
@@ -34,6 +39,7 @@ export interface OrderAccepted {
 }
 
 export interface OrderCompleted {
+  type: 'order:completed';
   orderId: string;
   customerId: string;
   cashRegisterId: string;
