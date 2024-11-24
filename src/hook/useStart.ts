@@ -59,7 +59,6 @@ export const useStart = ({ isPlaying, terminate }: OnStartProps) => {
   useEffect(() => {
     if (isPlaying) {
       if (!isStarted) {
-        sendStartRequest();
         setSimulationConfig({
           cooksNumber: Number(countOfCooks),
           cashRegistersNumber: Number(countOfCashRegisters),
@@ -70,11 +69,7 @@ export const useStart = ({ isPlaying, terminate }: OnStartProps) => {
           cashRegisters: getCashRegisters(countOfCashRegisters),
         });
         setIsStarted(true);
-      } else {
-        sendStopRequest();
       }
-    } else {
-      sendStartRequest();
     }
 
     if (terminate) {

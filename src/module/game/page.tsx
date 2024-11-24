@@ -6,7 +6,8 @@ import { Canvas } from '@react-three/fiber';
 import { useStart } from '../../hook/useStart';
 import { Kitchen } from '../components/kitchen';
 import { Lobby } from '../components/lobby';
-import '../../../public/css/gameControls.css'; // Імпортуємо стилі
+import '../../../public/css/gameControls.css';
+import {sendStartRequest, sendStopRequest, sendResumeRequest, sendTerminateRequest} from "../../socket/index"
 
 export function Game() {
   const [isPlaying, setIsPlaying] = useState(true);
@@ -51,9 +52,36 @@ export function Game() {
     };
   }, []);
 
-  const handleButtonClick = (action: string) => {
-    console.log(`${action} button clicked`);
-    // Add logic for each button action
+  const handleButtonClick = async (action: string) => {
+    try {
+      switch (action) {
+        case 'play':
+          setIsPlaying(true);
+          await sendStartRequest();
+          console.log('Simulation started');
+          break;
+        case 'pause':
+          setIsPlaying(false);
+          await sendStopRequest();
+          console.log('Simulation paused');
+          break;
+        case 'continue':
+          setIsPlaying(true);
+          await sendResumeRequest();
+          console.log('Simulation resumed');
+          break;
+        case 'terminate':
+          setTerminate(true);
+          await sendTerminateRequest();
+          console.log('Simulation terminated');
+          break;
+        default:
+          console.warn(`Unknown action: ${action}`);
+          break;
+      }
+    } catch (err) {
+      console.error(`Failed to execute action "${action}"`, err);
+    }
   };
 
   return (
@@ -77,12 +105,10 @@ export function Game() {
 
       {/* Кнопки поверх Canvas */}
       <div className="game-control-container">
-        <div className="game-control play" onClick={() => handleButtonClick('Play')}>
-          Play
-        </div>
-        <div className="game-control terminate">Terminate</div>
-        <div className="game-control pause">Pause</div>
-        <div className="game-control continue">Continue</div>
+        <div className="game-control play" onClick={() => handleButtonClick('play')}>Play</div>
+        <div className="game-control terminate" onClick={() => handleButtonClick('terminate')}>Terminate</div>
+        <div className="game-control pause" onClick={() => handleButtonClick('pause')}>Pause</div>
+        <div className="game-control continue" onClick={() => handleButtonClick('continue')}>Continue</div>
       </div>
     </div>
   );
