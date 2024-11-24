@@ -4,7 +4,7 @@ import { useMoveAlongPoints } from '../../hook/useMoveAlongPoints';
 import { updateChef } from '../../redux/reduser/game/chefs';
 import { IChef } from '../../types/chef';
 import { getDistance } from '../../util';
-import ChefModel3D from './humanModel';
+import ChefModel3D from './ChefModel3DProps';
 
 export const Chef = ({ position, goTo, ...rest }: Partial<IChef>) => {
   const [positions, setPositions] = useState<[number, number, number][]>([]);
