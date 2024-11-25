@@ -1,19 +1,23 @@
 import { useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { cashRegister, chefs } from '../constant';
-import { addCashRegister, getCashRegisters, removeCashRegisterById } from '../redux/reduser/game/cash-register';
-import { addChef, getChefs, removeChefById, updateChef } from '../redux/reduser/game/chefs';
-import { addCustomer, getCustomers, updateCustomer } from '../redux/reduser/game/customers';
+import { addCashRegister, removeCashRegisterById } from '../redux/reduser/game/cash-register';
+import { addChef, removeChefById, updateChef } from '../redux/reduser/game/chefs';
 import { ICashRegister } from '../types/cash-register';
 import { IChef } from '../types/chef';
 import * as events from '../types/events';
 import { getDistance } from '../util';
 
+type Options = {
+  lobbyCashRegisters: ICashRegister[];
+  customers: any[];
+  dispatch: (_arg0: any) => void;
+  updateCustomer: (_arg0: { type: string; payload: any }) => void;
+  cooks?: IChef[];
+};
+
 export const useManager = () => {
   const dispatch = useDispatch();
-  const lobbyCashRegisters = useSelector(getCashRegisters);
-  const customers = useSelector(getCustomers);
-  const cooks = useSelector(getChefs);
 
   const onGameStart = useCallback(
     (setting: any) => {
@@ -32,11 +36,31 @@ export const useManager = () => {
     },
     [dispatch],
   );
-  const onCustomerCreated = useCallback((event: events.CustomerCreated) => {
-    console.log('Customer created event', event);
-  }, []);
+  const onCustomerCreated = useCallback(
+    (event: events.CustomerCreated, { lobbyCashRegisters, updateCustomer }: Options) => {
+      const cash = lobbyCashRegisters[0];
+      if (cash) {
+        const freePosition = cash.available[cash.available.length - 1];
+
+        if (freePosition) {
+          updateCustomer({
+            type: 'ADD_CUSTOMER',
+            payload: {
+              id: event.customerId as unknown as number,
+              order: null,
+              status: 'in-queue',
+              position: freePosition,
+              cashRegisterId: null,
+            },
+          });
+        }
+      }
+    },
+    [],
+  );
+
   const onCustomerInQueue = useCallback(
-    (event: events.CustomerInQueue) => {
+    (event: events.CustomerInQueue, { customers, dispatch, lobbyCashRegisters, updateCustomer }: Options) => {
       let cash = lobbyCashRegisters.find((cash) => String(cash.id) == event.cashRegisterId);
       if (!cash) {
         cash = lobbyCashRegisters.find((cash) => typeof cash.id === 'number');
@@ -46,39 +70,37 @@ export const useManager = () => {
 
       if (cash) {
         const freePosition = cash.available.find(
-          (pos) => !customers.some(({ position }) => getDistance(position as any, pos) < 0.5),
+          (pos) => !customers!.some(({ position }) => getDistance(position as any, pos) < 0.5),
         );
 
         if (freePosition) {
-          console.log('Customer in queue', event, freePosition, cash);
-          dispatch(
-            addCustomer({
+          updateCustomer({
+            type: 'UPDATE_CUSTOMER',
+            payload: {
               id: event.customerId as unknown as number,
               order: null,
               status: 'in-queue',
-              position: cash.available[cash.available.length - 1],
+              goTo: [cash.available[cash.available.length - 1], freePosition],
               cashRegisterId: event.cashRegisterId,
-            }),
-          );
+            },
+          });
         } else {
           setTimeout(() => {
-            onCustomerInQueue(event);
+            onCustomerInQueue(event, { customers, dispatch, lobbyCashRegisters } as any);
           }, 9000);
         }
-      } else {
-        console.error('Cash register not found');
       }
     },
-    [customers, dispatch, lobbyCashRegisters],
+    [],
   );
   const onOrderAccepted = useCallback(
-    (_event: events.OrderAccepted) => {
-      const customer = customers.find((customer) => String(customer.id) === _event.customerId);
+    (_event: events.OrderAccepted, { customers, lobbyCashRegisters, updateCustomer }: Options) => {
+      const customer = customers!.find((customer) => String(customer.id) === _event.customerId);
       const cash = lobbyCashRegisters.find((cash) => String(cash.id) == _event.cashRegisterId);
       if (customer && cash) {
-        console.log('Order accepted event', _event, customer, cash);
-        dispatch(
-          updateCustomer({
+        updateCustomer({
+          type: 'UPDATE_CUSTOMER',
+          payload: {
             ...customer,
             order: {
               id: _event.orderId,
@@ -88,20 +110,22 @@ export const useManager = () => {
               cashRegister: cash,
             },
             status: 'in-queue',
-          }),
-        );
-      } else {
-        console.error('Customer not found', _event);
+          },
+        });
       }
     },
-    [customers, dispatch, lobbyCashRegisters],
+    [],
   );
   const onOrderCompleted = useCallback(
-    (event: events.OrderCompleted) => {
+    (event: events.OrderCompleted, { customers, lobbyCashRegisters, updateCustomer }: Options) => {
       const cash = lobbyCashRegisters.find((cash) => String(cash.id) === event.cashRegisterId);
       const customer = customers.find((customer) => String(customer.id) === event.customerId);
-      dispatch(updateCustomer({ ...customer, goTo: cash?.outPositions } as any));
-      console.log('Order completed event', event, cash, customer);
+      console.log('onOrderCompleted', event, customer, cash, customers);
+
+      updateCustomer({
+        type: 'UPDATE_CUSTOMER',
+        payload: { ...customer, goTo: cash?.outPositions } as any,
+      });
 
       cash!.available.forEach((pos, idx, arr) => {
         if (idx + 1 < arr.length) {
@@ -109,39 +133,37 @@ export const useManager = () => {
             .filter(({ position }) => !position)
             .find(({ position }) => getDistance(position as any, arr[idx + 1] as any) < 0.5);
           if (customer) {
-            dispatch(updateCustomer({ ...customer, goTo: [pos] } as any));
+            updateCustomer({ type: 'UPDATE_CUSTOMER', payload: { ...customer, goTo: [pos] } as any });
           }
         }
       });
     },
-    [customers, dispatch, lobbyCashRegisters],
+    [],
   );
   const onDishPreparationStarted = useCallback(
-    (event: events.DishPreparationStarted) => {
+    (event: events.DishPreparationStarted, { cooks = [], dispatch }: Options) => {
       const { cookId, nextDishState } = event;
       let chef = cooks.find((ch) => String(ch.id) === cookId);
       if (!chef) {
         chef = cooks.find((ch) => typeof ch.id === 'number');
         dispatch(addChef({ ...chef, id: cookId } as any));
         dispatch(removeChefById(chef?.id as any));
+        console.log('chef', chef, cooks, event, 'change chef id');
       }
 
       if (chef) {
-        const newPosition = ['baking'].includes(nextDishState)
+        console.log(nextDishState, 'nextDishState');
+        const newPosition = ['BAKED'].includes(nextDishState)
           ? chefs.ovenPositions[chef.index]
-          : ['completed'].includes(nextDishState)
+          : ['COMPLATED'].includes(nextDishState)
             ? chefs.final[chef.index]
             : chefs.positions[chef.index];
 
-        console.log('Dish preparation started event', event, chef, newPosition);
         dispatch(updateChef({ ...chef, goTo: [newPosition] }));
       }
     },
-    [cooks, dispatch],
+    [],
   );
-  const onDishPreparationCompleted = useCallback((_event: events.DishPreparationCompleted) => {
-    console.log('Dish preparation completed event', _event);
-  }, []);
 
   return {
     onGameStart,
@@ -150,6 +172,5 @@ export const useManager = () => {
     onOrderAccepted,
     onOrderCompleted,
     onDishPreparationStarted,
-    onDishPreparationCompleted,
   };
 };

@@ -10,7 +10,7 @@ export const Chef = ({ position, goTo, ...rest }: Partial<IChef>) => {
   const [positions, setPositions] = useState<[number, number, number][]>([]);
   const dispatch = useDispatch();
 
-  const { objectRef } = useMoveAlongPoints(positions, 0.1, (index, points) => {
+  const { objectRef } = useMoveAlongPoints(positions, 0.05, (index, points) => {
     setTimeout(() => {
       // без setTimeout утворюється зациклення, відкрий консоль
       dispatch(updateChef({ ...rest, position: points[index] } as any));

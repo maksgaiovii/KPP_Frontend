@@ -42,7 +42,6 @@ const kitchenConfig = {
 
 export const Kitchen = () => {
   const chefs = useSelector(getChefs);
-  console.log(chefs, 'cfefs');
 
   return (
     <>

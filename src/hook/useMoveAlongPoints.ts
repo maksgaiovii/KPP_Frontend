@@ -30,8 +30,8 @@ export const useMoveAlongPoints = (
         object.position.add(direction.multiplyScalar(speed));
 
         // Rotate the object to face the target
-        // const lookAtPosition = new THREE.Vector3(...points[currentIndex]);
-        // object.lookAt(lookAtPosition); // Make the object face the target
+        const lookAtPosition = new THREE.Vector3(...points[currentIndex]);
+        object.lookAt(lookAtPosition); // Make the object face the target
       } else {
         if (onReachPoint) onReachPoint(currentIndex, points);
         setCurrentIndex((prev) => prev + 1);

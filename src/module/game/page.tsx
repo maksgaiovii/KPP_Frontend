@@ -7,14 +7,22 @@ import { useStart } from '../../hook/useStart';
 import { Kitchen } from '../components/kitchen';
 import { Lobby } from '../components/lobby';
 import '../../../public/css/gameControls.css';
-import { Client } from '@stomp/stompjs';
 import { sendResumeRequest, sendStartRequest, sendStopRequest, sendTerminateRequest } from '../../socket/index';
 
 export function Game() {
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isStarted, setIsStarted] = useState(false);
   const [terminate, setTerminate] = useState(false);
 
-  const { eventHandlers } = useStart({ isPlaying, terminate });
+  useStart({
+    isPlaying,
+    terminate,
+    isStarted,
+    afterStart: () => {
+      sendStartRequest();
+      setIsStarted(true);
+    },
+  });
 
   useEffect(() => {
     try {
@@ -22,7 +30,7 @@ export function Game() {
       document.body.style.backgroundSize = 'cover';
       document.body.style.height = '100vh';
     } catch (error) {
-      console.error('Failed to change background', error);
+      console.log(error);
     }
 
     return () => {
@@ -35,67 +43,31 @@ export function Game() {
       switch (action) {
         case 'play':
           setIsPlaying(true);
-          await sendStartRequest();
-          console.log('Simulation started');
+
           break;
         case 'pause':
           setIsPlaying(false);
           await sendStopRequest();
-          console.log('Simulation paused');
+
           break;
         case 'continue':
           setIsPlaying(true);
           await sendResumeRequest();
-          console.log('Simulation resumed');
+
           break;
         case 'terminate':
           setTerminate(true);
           await sendTerminateRequest();
-          console.log('Simulation terminated');
+          window.location.reload();
+
           break;
         default:
-          console.warn(`Unknown action: ${action}`);
           break;
       }
     } catch (err) {
-      console.error(`Failed to execute action "${action}"`, err);
+      console.log(err);
     }
   };
-
-  useEffect(() => {
-    console.log('Connecting to the broker RERENDER');
-    const client = new Client({
-      brokerURL: 'ws://localhost:8080/websocket',
-      onConnect: () => {
-        Object.keys(eventHandlers).forEach((key: any) => {
-          client.subscribe(`/topic/${key}`, (message) => {
-            const event = JSON.parse(message.body);
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-expect-error
-            eventHandlers[key](event);
-          });
-        });
-      },
-      onStompError: (frame) => {
-        console.log('Broker reported error: ' + frame.headers['message']);
-        console.log('Additional details: ' + frame.body);
-      },
-      onWebSocketClose: (evt) => {
-        console.log('Socket closed!', evt);
-      },
-      onDisconnect: () => {
-        console.log('Disconnected');
-      },
-    });
-
-    client.activate();
-
-    return () => {
-      client.deactivate();
-    };
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <div
@@ -118,17 +90,24 @@ export function Game() {
 
       {/* Кнопки поверх Canvas */}
       <div className="game-control-container">
-        <div className="game-control play" onClick={() => handleButtonClick('play')}>
-          Play
-        </div>
+        {isStarted && (
+          <>
+            {' '}
+            <div className="game-control pause" onClick={() => handleButtonClick('pause')}>
+              Pause
+            </div>
+            <div className="game-control continue" onClick={() => handleButtonClick('continue')}>
+              Continue
+            </div>
+          </>
+        )}
+        {!isStarted && (
+          <div className="game-control play" onClick={() => handleButtonClick('play')}>
+            Play
+          </div>
+        )}
         <div className="game-control terminate" onClick={() => handleButtonClick('terminate')}>
           Terminate
-        </div>
-        <div className="game-control pause" onClick={() => handleButtonClick('pause')}>
-          Pause
-        </div>
-        <div className="game-control continue" onClick={() => handleButtonClick('continue')}>
-          Continue
         </div>
       </div>
     </div>
