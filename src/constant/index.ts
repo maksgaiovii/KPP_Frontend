@@ -42,6 +42,12 @@ export const chefs = {
     [-3, 1, 4],
     [2, 1, 0],
   ] as [number, number, number][],
+  defaultRotation: [
+    [0, -Math.PI / 2, 0],
+    [0, -Math.PI / 2, 0],
+    [0, -Math.PI / 2, 0],
+    [0, 0, 0],
+  ] as [number, number, number][],
 };
 
 // avaibleQueuePositions

@@ -32,7 +32,7 @@ export const Chef = ({ position, goTo, ...rest }: Partial<IChef>) => {
   }, [goTo]);
 
   return (
-    <mesh ref={objectRef}>
+    <mesh ref={objectRef} rotation={rest.rotation}>
       <ChefModel3D
         bodyColor="peachpuff"
         headColor="peachpuff"
@@ -41,6 +41,7 @@ export const Chef = ({ position, goTo, ...rest }: Partial<IChef>) => {
         shirtColor="brown"
         pantsColor="blue"
         shoesColor="black"
+        pizza={rest.pizza}
       />
     </mesh>
   );

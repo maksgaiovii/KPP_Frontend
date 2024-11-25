@@ -58,7 +58,6 @@ export const useManager = () => {
     },
     [],
   );
-
   const onCustomerInQueue = useCallback(
     (event: events.CustomerInQueue, { customers, dispatch, lobbyCashRegisters, updateCustomer }: Options) => {
       let cash = lobbyCashRegisters.find((cash) => String(cash.id) == event.cashRegisterId);
@@ -120,7 +119,6 @@ export const useManager = () => {
     (event: events.OrderCompleted, { customers, lobbyCashRegisters, updateCustomer }: Options) => {
       const cash = lobbyCashRegisters.find((cash) => String(cash.id) === event.cashRegisterId);
       const customer = customers.find((customer) => String(customer.id) === event.customerId);
-      console.log('onOrderCompleted', event, customer, cash, customers);
 
       updateCustomer({
         type: 'UPDATE_CUSTOMER',
@@ -148,18 +146,29 @@ export const useManager = () => {
         chef = cooks.find((ch) => typeof ch.id === 'number');
         dispatch(addChef({ ...chef, id: cookId } as any));
         dispatch(removeChefById(chef?.id as any));
-        console.log('chef', chef, cooks, event, 'change chef id');
       }
 
       if (chef) {
-        console.log(nextDishState, 'nextDishState');
-        const newPosition = ['BAKED'].includes(nextDishState)
-          ? chefs.ovenPositions[chef.index]
+        let newPosition = ['BAKED'].includes(nextDishState)
+          ? [chefs.ovenPositions[chef.index][0], 1, chefs.ovenPositions[chef.index][2]]
           : ['COMPLATED'].includes(nextDishState)
             ? chefs.final[chef.index]
             : chefs.positions[chef.index];
 
-        dispatch(updateChef({ ...chef, goTo: [newPosition] }));
+        if (getDistance(chef.position as any, newPosition as any) < 0.5) {
+          newPosition = undefined as any;
+        }
+
+        dispatch(
+          updateChef({
+            ...chef,
+            goTo: newPosition ? [newPosition as any] : [],
+            pizza: {
+              isCompleted: ['COMPLATED'].includes(nextDishState),
+              state: nextDishState,
+            } as any,
+          }),
+        );
       }
     },
     [],

@@ -1,4 +1,6 @@
 import React from 'react';
+import { IPizza } from '../../../types/pizza';
+import Pizza3DModel from './PizzaModel3D';
 
 interface ChefModel3DProps {
   bodyColor: string;
@@ -8,6 +10,7 @@ interface ChefModel3DProps {
   shirtColor: string;
   pantsColor: string;
   shoesColor: string;
+  pizza?: IPizza;
 }
 
 const ChefModel3D: React.FC<ChefModel3DProps> = ({
@@ -18,6 +21,7 @@ const ChefModel3D: React.FC<ChefModel3DProps> = ({
   shirtColor,
   pantsColor,
   shoesColor,
+  pizza,
 }) => {
   return (
     <group scale={[0.5, 0.5, 0.5]}>
@@ -71,6 +75,12 @@ const ChefModel3D: React.FC<ChefModel3DProps> = ({
         <boxGeometry args={[0.4, 0.2, 0.5]} />
         <meshBasicMaterial color={shoesColor} />
       </mesh>
+
+      {pizza && (
+        <group position={[0, 0.7, 3]}>
+          <Pizza3DModel pizza={pizza} />
+        </group>
+      )}
     </group>
   );
 };

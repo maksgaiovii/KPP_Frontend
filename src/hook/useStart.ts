@@ -36,6 +36,7 @@ const chefs = constants.chefs.positions.map(
     ({
       id: index,
       index,
+      rotation: constants.chefs.defaultRotation[index] as any,
       position,
       near: 'table',
     }) as IChef,
