@@ -12,19 +12,26 @@ export const useMoveAlongPoints = (
   const [currentIndex, setCurrentIndex] = useState(0);
   useFrame(() => {
     if (objectRef.current && points[currentIndex]) {
+      const object = objectRef.current;
+
+      // If starting at the first point, initialize position
       if (currentIndex === 0) {
-        objectRef.current.position.set(points[currentIndex][0], points[currentIndex][1], points[currentIndex][2]);
+        object.position.set(points[currentIndex][0], points[currentIndex][1], points[currentIndex][2]);
         setCurrentIndex(1);
         return;
       }
 
-      const currentPosition = new THREE.Vector3().copy(objectRef.current.position);
+      const currentPosition = new THREE.Vector3().copy(object.position);
       const targetPosition = new THREE.Vector3(...points[currentIndex]);
       const distance = currentPosition.distanceTo(targetPosition);
 
       if (distance > precision) {
         const direction = new THREE.Vector3().copy(targetPosition).sub(currentPosition).normalize();
-        objectRef.current.position.add(direction.multiplyScalar(speed));
+        object.position.add(direction.multiplyScalar(speed));
+
+        // Rotate the object to face the target
+        const lookAtPosition = new THREE.Vector3(...points[currentIndex]);
+        object.lookAt(lookAtPosition); // Make the object face the target
       } else {
         if (onReachPoint) onReachPoint(currentIndex, points);
         setCurrentIndex((prev) => prev + 1);

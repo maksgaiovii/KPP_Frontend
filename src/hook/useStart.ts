@@ -1,29 +1,24 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Client } from '@stomp/stompjs';
 import * as constants from '../constant';
+import { getCashRegisters } from '../redux/reduser/game/cash-register';
+import { getChefs } from '../redux/reduser/game/chefs';
+import { useCustomerContext } from '../redux/reduser/game/customers';
 import { setMenuState } from '../redux/reduser/menu';
-import { selectAmountOfCashRegisters, selectAmountOfCooks } from '../redux/reduser/setting';
+import { selectAmountOfCashRegisters, selectAmountOfCooks, selectCookingStrategy } from '../redux/reduser/setting';
+import { setSimulationConfig } from '../socket';
 import { ICashRegister } from '../types/cash-register';
 import { IChef } from '../types/chef';
 import { useManager } from './useManager';
 
+// global && Object.assign(global, { WebSocket });
+
 type OnStartProps = {
   isPlaying: boolean;
+  isStarted: boolean;
   terminate: boolean;
-};
-
-const socket = new WebSocket('ws://localhost:8080/websocket');
-
-socket.onopen = () => {
-  console.log('Connected to the server');
-};
-
-socket.onerror = (error) => {
-  console.error('Connection error:', error);
-};
-
-socket.onclose = () => {
-  console.log('Disconnected from server');
+  afterStart?: () => void;
 };
 
 const cashRegisters: ICashRegister[] = constants.cashRegister.positions.map(
@@ -41,107 +36,138 @@ const chefs = constants.chefs.positions.map(
     ({
       id: index,
       index,
+      rotation: constants.chefs.defaultRotation[index] as any,
       position,
       near: 'table',
     }) as IChef,
 );
 
-const sendStartRequest = async () => {
-  try {
-    const response = await fetch('http://localhost:8080/simulation/start', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+const getStaticChefs = (count: number | string) => chefs.slice(0, Number(count));
+const getStaticCashRegisters = (count: number | string) => cashRegisters.slice(0, Number(count));
 
-    const data = await response.json();
-    if (response.ok) {
-      console.log('Success:', data.message);
-    } else {
-      console.error('Error:', data.message);
-    }
-  } catch (error) {
-    console.error('Request failed', error);
-  }
-};
+export const useStart = ({ isPlaying, terminate, isStarted, afterStart }: OnStartProps) => {
+  const [socket, setSocket] = useState<any>(null);
+  const [events, setEvents] = useState<any[]>([]);
+  const [currentEvent, setCurrentEvent] = useState<any>(null);
 
-const getChefs = (count: number | string) => chefs.slice(0, Number(count));
-const getCashRegisters = (count: number | string) => cashRegisters.slice(0, Number(count));
-
-export const useStart = ({ isPlaying, terminate }: OnStartProps) => {
   const dispatch = useDispatch();
-  const [countOfCashRegisters, countOfCooks] = [
+  const [countOfCashRegisters, countOfCooks, cookingStrategy] = [
     useSelector(selectAmountOfCashRegisters),
     useSelector(selectAmountOfCooks),
+    useSelector(selectCookingStrategy),
   ];
+  const lobbyCashRegisters = useSelector(getCashRegisters);
+  const cooks = useSelector(getChefs);
+
+  const {
+    dispatch: updateCustomer,
+    state: { customers },
+  } = useCustomerContext();
+
   const {
     onGameStart,
-    onCustomerCreated,
     onCustomerInQueue,
     onOrderAccepted,
     onOrderCompleted,
-    onChefChangeStatus,
     onDishPreparationStarted,
-    onDishPreparationCompleted,
+    onCustomerCreated,
   } = useManager();
 
   useEffect(() => {
     if (isPlaying) {
-      onGameStart({
-        chefs: getChefs(countOfCooks),
-        cashRegisters: getCashRegisters(countOfCashRegisters),
-      });
-
-      sendStartRequest();
+      if (!isStarted) {
+        setSimulationConfig({
+          cooksNumber: Number(countOfCooks),
+          cashRegistersNumber: Number(countOfCashRegisters),
+          specializedCooksMode: cookingStrategy === 'm:m',
+        }).finally(() => {
+          afterStart?.();
+        });
+        onGameStart({
+          chefs: getStaticChefs(countOfCooks),
+          cashRegisters: getStaticCashRegisters(countOfCashRegisters),
+        });
+      }
     }
 
     if (terminate) {
       dispatch(setMenuState('preview'));
     }
-  }, [isPlaying, terminate, dispatch, countOfCooks, countOfCashRegisters, onGameStart]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isPlaying, terminate, dispatch, countOfCooks, countOfCashRegisters, onGameStart, isStarted, cookingStrategy]);
+
+  const eventHandlers = useMemo(
+    () => ({
+      'customer-created': onCustomerCreated,
+      'new-customer-in-queue': onCustomerInQueue,
+      'order-accepted': onOrderAccepted,
+      'order-completed': onOrderCompleted,
+      'dish-preparation-started': onDishPreparationStarted,
+    }),
+    [onCustomerInQueue, onOrderAccepted, onOrderCompleted, onDishPreparationStarted, onCustomerCreated],
+  );
 
   useEffect(() => {
-    socket.onmessage = (event) => {
-      const message = JSON.parse(event.data);
-      switch (message.type) {
-        case 'customer:created':
-          onCustomerCreated(message.data);
-          break;
-        case 'customer:inQueue':
-          onCustomerInQueue(message.data);
-          break;
-        case 'order:accepted':
-          onOrderAccepted(message.data);
-          break;
-        case 'order:completed':
-          onOrderCompleted(message.data);
-          break;
-        case 'chef:changeStatus':
-          onChefChangeStatus(message.data);
-          break;
-        case 'dish:preparationStarted':
-          onDishPreparationStarted(message.data);
-          break;
-        case 'dish:preparationCompleted':
-          onDishPreparationCompleted(message.data);
-          break;
-        default:
-          console.warn('Невідома подія:', message.type);
-          break;
-      }
-    };
+    const client = new Client({
+      brokerURL: 'ws://localhost:8080/websocket',
+      onConnect: () => {
+        setSocket(client);
+      },
+      onStompError: (frame) => {
+        console.error(frame, 'onStompError');
+      },
+      onWebSocketClose: (evt) => {
+        console.error(evt, 'onWebSocketClose');
+      },
+      onDisconnect: () => {
+        console.error('onDisconnect');
+      },
+    });
+
+    client.activate();
 
     return () => {
-      // socket.close();
+      client.deactivate();
+      setSocket(null);
     };
-  }, [
-    onCustomerCreated,
-    onCustomerInQueue,
-    onOrderAccepted,
-    onOrderCompleted,
-    onChefChangeStatus,
-    onDishPreparationStarted,
-    onDishPreparationCompleted,
-  ]);
+  }, []);
+
+  useEffect(() => {
+    if (socket) {
+      Object.entries(eventHandlers).forEach(([event]) => {
+        socket.subscribe(`/topic/${event}`, (message: any) => {
+          const body = JSON.parse(message.body);
+          setEvents((prev) => [...prev, { message: body, event }]);
+        });
+      });
+    }
+  }, [socket, eventHandlers]);
+
+  useEffect(() => {
+    if (currentEvent) return;
+    setCurrentEvent(events[0]);
+    setEvents((prev) => prev.slice(1));
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [events[0], currentEvent]);
+
+  useEffect(() => {
+    if (currentEvent) {
+      const timeout = setTimeout(() => {
+        const { message, event: eventName } = currentEvent;
+        console.log('event', eventName, message, Date.now());
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        eventHandlers[eventName](message, { customers, dispatch, cooks, lobbyCashRegisters, updateCustomer });
+        setCurrentEvent(null);
+      }, 300);
+
+      return () => {
+        clearTimeout(timeout);
+      };
+    }
+  }, [cooks, currentEvent, customers, dispatch, eventHandlers, lobbyCashRegisters, updateCustomer]);
+
+  return { eventHandlers };
 };

@@ -4,14 +4,14 @@ export interface IPizza extends I3DObject {
   uuid: string;
   isCompleted: boolean;
   state:
-    | 'initial'
-    | 'dough preparation'
-    | 'dough rolling'
-    | 'sauce addition'
-    | 'topping addition'
-    | 'baking'
-    | 'finishing touches'
-    | 'completed';
+    | 'INITIAL'
+    | 'DOUGH_PREPARED'
+    | 'DOUGH_ROLLED'
+    | 'SAUCE_ADDED'
+    | 'TOPPING_ADDED'
+    | 'BAKED'
+    | 'FINISHING_TOUCHES'
+    | 'COMPLETED';
   ingredients: string[];
 }
 

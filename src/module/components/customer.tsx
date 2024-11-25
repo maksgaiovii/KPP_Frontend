@@ -1,18 +1,22 @@
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { useMoveAlongPoints } from '../../hook/useMoveAlongPoints';
-import { updateCustomer } from '../../redux/reduser/game/customers';
+import { useCustomerContext } from '../../redux/reduser/game/customers';
 import { ICustomer } from '../../types/customer';
 import { getDistance } from '../../util';
+import CustomerModel3D from './Models3D/ClientModel3D';
 
 export const Customer = ({ position, goTo, ...rest }: ICustomer) => {
   const [positions, setPositions] = useState<[number, number, number][]>([]);
-  const dispatch = useDispatch();
 
-  const { objectRef } = useMoveAlongPoints(positions, 0.1, (index, points) => {
+  const { dispatch } = useCustomerContext();
+
+  const { objectRef } = useMoveAlongPoints(positions, 0.05, (index, points) => {
     setTimeout(() => {
       // без setTimeout утворюється зациклення, відкрий консоль
-      dispatch(updateCustomer({ ...rest, position: points[index] } as any));
+      dispatch({
+        type: 'UPDATE_CUSTOMER',
+        payload: { ...rest, position: points[index] } as any,
+      });
     }, 1);
   });
 
@@ -30,14 +34,21 @@ export const Customer = ({ position, goTo, ...rest }: ICustomer) => {
     }
   }, [goTo]);
 
-  // if (objectRef?.current?.position && objectRef.current.position.z < 8) return null;
   if ((position as any)?.[2] > 8) return null;
 
   return (
     <>
       <mesh ref={objectRef}>
-        <sphereGeometry args={[0.32]} />
-        <meshMatcapMaterial color={'#0b132b'} />
+        <CustomerModel3D
+          bodyColor="lightgrey"
+          headColor="peachpuff"
+          limbColor="lightgrey"
+          hatColor="darkblue"
+          shirtColor="skyblue"
+          pantsColor="darkgrey"
+          shoesColor="black"
+          accessoryColor="red"
+        />
       </mesh>
     </>
   );

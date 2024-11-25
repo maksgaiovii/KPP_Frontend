@@ -14,20 +14,20 @@ const chefSlice = createSlice({
   initialState: initialMenuState,
   reducers: {
     addChef(state, action: PayloadAction<IChef>) {
-      if (!state.chefs.find((chef) => chef.id === action.payload.id))
+      if (!state.chefs.find((chef) => chef.id == action.payload.id))
         state.chefs.push(JSON.parse(JSON.stringify(action.payload)));
     },
     removeChefById(state, action: PayloadAction<string | number>) {
-      state.chefs = state.chefs.filter((chef) => chef.id !== action.payload);
+      state.chefs = state.chefs.filter((chef) => chef.id != action.payload);
     },
     changeChefStatus(state, action: PayloadAction<{ id: string | number; status: IChef['status'] }>) {
-      const chef = state.chefs.find((chef) => chef.id === action.payload.id);
+      const chef = state.chefs.find((chef) => chef.id == action.payload.id);
       if (chef) {
         chef.status = action.payload.status;
       }
     },
     updateChef(state, action: PayloadAction<IChef>) {
-      const chefIndex = state.chefs.findIndex((chef) => chef.id === action.payload.id);
+      const chefIndex = state.chefs.findIndex((chef) => chef.id == action.payload.id);
       if (chefIndex !== -1) {
         state.chefs[chefIndex] = JSON.parse(JSON.stringify(action.payload));
       }

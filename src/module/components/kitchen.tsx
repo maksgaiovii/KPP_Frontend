@@ -1,4 +1,5 @@
 import { useSelector } from 'react-redux';
+import { Text } from '@react-three/drei';
 import { Euler, Vector3 } from '@react-three/fiber';
 import { chefs as chefsConstant } from '../../constant';
 import { getChefs } from '../../redux/reduser/game/chefs';
@@ -42,7 +43,6 @@ const kitchenConfig = {
 
 export const Kitchen = () => {
   const chefs = useSelector(getChefs);
-  console.log(chefs, 'cfefs');
 
   return (
     <>
@@ -84,6 +84,13 @@ export const Kitchen = () => {
       <mesh position={kitchenConfig.ceiling.position as Vector3}>
         <boxGeometry args={kitchenConfig.ceiling.size as any} />
         <meshMatcapMaterial color={kitchenConfig.ceiling.color} />
+      </mesh>
+
+      <mesh position={[-4.95, 2, 7]} rotation={[0, Math.PI / 2, 0]}>
+        <meshStandardMaterial />
+        <Text fontSize={3} color="#D1D1D1" anchorX="center" anchorY="bottom">
+          Kosiv Software
+        </Text>
       </mesh>
     </>
   );

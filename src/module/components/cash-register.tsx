@@ -9,7 +9,12 @@ interface ButtonWithTextProps {
   onClick: () => void;
 }
 
-const ButtonWithText: React.FC<ButtonWithTextProps> = ({ position, text, color, onClick }: ButtonWithTextProps) => {
+export const ButtonWithText: React.FC<ButtonWithTextProps> = ({
+  position,
+  text,
+  color,
+  onClick,
+}: ButtonWithTextProps) => {
   return (
     <mesh
       position={position}

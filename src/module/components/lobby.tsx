@@ -1,13 +1,14 @@
 import { useSelector } from 'react-redux';
 import { getCashRegisters } from '../../redux/reduser/game/cash-register';
-import { getCustomers } from '../../redux/reduser/game/customers';
+import { useCustomerContext } from '../../redux/reduser/game/customers';
 import { CashRegister } from './cash-register';
 import { Customer } from './customer';
 
 export const Lobby: React.FC = () => {
   const cashRegister = useSelector(getCashRegisters);
-  const customers = useSelector(getCustomers);
-
+  const {
+    state: { customers },
+  } = useCustomerContext();
   return (
     <>
       <mesh position={[0, -0.5, 12.5]} rotation={[0, 0, 0]}>
